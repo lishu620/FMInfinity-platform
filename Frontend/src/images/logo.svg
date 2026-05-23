@@ -1,0 +1,23 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+ <!-- 收音机主体 -->
+
+ <!-- 收音机天线 -->
+ <!-- 收音机左侧条纹 -->
+ <!-- 收音机右侧圆形喇叭 -->
+ <!-- FM文字 -->
+ <!-- 无限符号∞ -->
+ <g>
+  <title>Layer 1</title>
+  <line x1="93" y1="168" x2="189" y2="168" stroke-width="10" stroke-linecap="round" id="svg_3" stroke="#4A98E9"/>
+  <rect stroke="#4A98E9" x="41" y="131" width="360" height="173" rx="20" fill="none" stroke-width="12" id="svg_1"/>
+  <line x1="63" y1="130" x2="263" y2="50" stroke="#4A98E9" stroke-width="12" stroke-linecap="round" id="svg_2"/>
+  <line x1="77" y1="194" x2="211" y2="194" stroke-width="10" stroke-linecap="round" id="svg_4" stroke="#4A98E9"/>
+  <line x1="67" y1="219" x2="215" y2="219" stroke-width="10" stroke-linecap="round" id="svg_5" stroke="#4A98E9"/>
+  <line x1="77" y1="243" x2="209.00001" y2="243" stroke-width="10" stroke-linecap="round" id="svg_6" stroke="#4A98E9"/>
+  <line x1="98" y1="269" x2="185" y2="269" stroke-width="10" stroke-linecap="round" id="svg_7" stroke="#4A98E9"/>
+  <circle cx="306" cy="221" r="60" fill="none" stroke="#4A98E9" stroke-width="12" id="svg_8"/>
+  <circle cx="306" cy="222" r="30" fill="none" stroke="#4A98E9" stroke-width="12" id="svg_9"/>
+  <text transform="matrix(0.788805 0 0 0.922653 88.2235 9.7572)" stroke="null" x="418" y="286" font-family="Arial, sans-serif" font-size="180" font-weight="bold" fill="#4A98E9" id="svg_10">FM</text>
+  <path d="m703,215c-30,-40 -60,-40 -60,0c0,40 30,40 60,0c30,-40 60,-40 60,0c0,40 -30,40 -60,0z" fill="none" stroke="#4A98E9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" id="svg_11"/>
+ </g>
+</svg>

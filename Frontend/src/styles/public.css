@@ -1,0 +1,48 @@
+/* 页面容器 */
+.page-container {
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+/* 页面容器标题 */
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.acrylic {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 全屏居中看板娘 - 不遮挡任何内容 */
+.mascot-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* 永远在最底层，不挡文字 */
+  pointer-events: none;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+}
+
+.mascot-img {
+  width: auto;
+  height: 85vh; /* 占屏幕高度 85%，大小适中 */
+  max-width: 90vw;
+  object-fit: contain;
+  opacity: 0.2; /* 非常淡，不影响阅读 */
+  filter: blur(0.6px); /* 轻微模糊，弱化存在感 */
+}
+
+.tip {
+  color: #666;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,9 @@
+.issue-list-box {
+  width: 100%;
+}
+
+.issue-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
