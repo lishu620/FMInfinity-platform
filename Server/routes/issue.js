@@ -315,8 +315,8 @@ router.put(
       await Issue.update({ status }, { where: { id } });
       const issue = await Issue.findByPk(id);
 
-      // ✅ 安全调用
-      const { sendIssueStatusNotice } = require('../utils/noticeSend');
+      // 调用通知功能
+      const { sendIssueStatusNotice } = require("../utils/noticeSend");
       await sendIssueStatusNotice(issue, status, sendUid);
 
       res.json({ message: "状态更新成功，已通知文案组" });
@@ -324,7 +324,7 @@ router.put(
       console.error(err);
       res.status(500).json({ message: "更新失败" });
     }
-  }
+  },
 );
 
 // 编辑歌曲

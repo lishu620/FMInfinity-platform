@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 前端代理
-const distPath = path.join(__dirname, "../Frontend/dist");
+const distPath = path.join(__dirname, "../Client/dist");
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
   console.log("已挂载前端静态文件");
@@ -23,7 +23,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api", require("./routes/issue"));
 app.use("/api", require("./routes/vote"));
 app.use("/api", require("./routes/vsingers"));
-app.use("/api/notice", require("./routes/notice"))
+app.use("/api/notice", require("./routes/notice"));
 
 // SPA fallback
 app.use((req, res, next) => {

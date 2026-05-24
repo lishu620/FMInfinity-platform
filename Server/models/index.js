@@ -37,7 +37,7 @@ const Issue = sequelize.define("Issue", {
       "submitting",
       "voting",
       "confirmed",
-      "published"
+      "published",
     ),
     defaultValue: "draft",
     allowNull: false,
@@ -101,8 +101,7 @@ const Vsinger = sequelize.define("Vsinger", {
   vsingerName: { type: DataTypes.TEXT, allowNull: false },
 });
 
-// ✅ 正确导入 Notice 模型（关键！）
-const Notice = require('./notice')(sequelize, DataTypes);
+const Notice = require("./notice")(sequelize, DataTypes);
 
 // 表关联
 User.belongsTo(Status, { foreignKey: "statusId" });
@@ -146,7 +145,6 @@ Vsinger.belongsToMany(PublicSong, {
   as: "publicSongs",
 });
 
-// ✅ 正确关联 Notice（必须在导入之后）
 Notice.belongsTo(User, { foreignKey: "receiveUserId", as: "receiveUser" });
 Notice.belongsTo(User, { foreignKey: "sendUserId", as: "sendUser" });
 
@@ -192,5 +190,5 @@ module.exports = {
   Vote,
   Copy,
   Vsinger,
-  Notice, // ✅ 正确导出
+  Notice,
 };

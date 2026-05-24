@@ -29,19 +29,14 @@ import { marked } from "marked";
 const loading = ref(true);
 const latestUpdates = ref([]);
 
-// 手动解析 Frontmatter（无需 gray-matter）
 function parseFrontmatter(markdown) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   const match = markdown.match(frontmatterRegex);
-
   if (!match) {
     return { data: {}, content: markdown };
   }
-
   const yamlContent = match[1];
   const markdownContent = match[2];
-
-  // 简单解析键值对
   const data = {};
   const lines = yamlContent.split("\n");
   for (const line of lines) {
@@ -49,7 +44,6 @@ function parseFrontmatter(markdown) {
     if (colonIndex === -1) continue;
     const key = line.slice(0, colonIndex).trim();
     let value = line.slice(colonIndex + 1).trim();
-    // 去除引号
     if (
       (value.startsWith('"') && value.endsWith('"')) ||
       (value.startsWith("'") && value.endsWith("'"))
@@ -58,11 +52,9 @@ function parseFrontmatter(markdown) {
     }
     data[key] = value;
   }
-
   return { data, content: markdownContent };
 }
 
-// 日期解析（YYYY.MM.DD）
 function parseDate(dateStr) {
   const [year, month, day] = dateStr.split(".").map(Number);
   return new Date(year, month - 1, day);
@@ -70,33 +62,22 @@ function parseDate(dateStr) {
 
 onMounted(async () => {
   try {
-    // 动态导入所有 md 文件（eager 模式）
-    const modules = import.meta.glob("/src/updates/*.md", {
-      as: "raw",
-      eager: true,
-    });
-
+    // 注意：移除了 as: 'raw'，依赖自定义插件将 .md 导出为字符串
+    const modules = import.meta.glob("/src/updates/*.md", { eager: true });
     console.log("找到的文件：", Object.keys(modules));
 
     const updatesData = [];
-    for (const [path, rawContent] of Object.entries(modules)) {
+    for (const [path, module] of Object.entries(modules)) {
+      const rawContent = module.default; // 关键：通过 .default 获取字符串内容
       const fileName = path.split("/").pop();
-
-      // 手动解析 frontmatter
       const { data, content } = parseFrontmatter(rawContent);
 
-      // 校验必要字段
       if (!data.client || !data.server || !data.date) {
-        console.warn(
-          `文件 ${fileName} 缺少 client/server/date 字段，已跳过`,
-          data,
-        );
+        console.warn(`文件 ${fileName} 缺少必要字段`, data);
         continue;
       }
 
-      // 渲染 Markdown 正文
       const renderedHtml = await marked.parse(content);
-
       updatesData.push({
         fileName,
         client: data.client,
@@ -106,14 +87,9 @@ onMounted(async () => {
       });
     }
 
-    // 按日期降序排序
     updatesData.sort((a, b) => parseDate(b.date) - parseDate(a.date));
-
-    // 取最新三条
     const latest = updatesData.slice(0, 3);
-    if (latest.length > 0) {
-      latest[0].isLatest = true;
-    }
+    if (latest.length > 0) latest[0].isLatest = true;
     latestUpdates.value = latest;
   } catch (error) {
     console.error("加载更新日志失败:", error);
