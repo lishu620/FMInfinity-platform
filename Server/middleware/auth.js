@@ -13,6 +13,14 @@ const authMiddleware = async (req, res, next) => {
     const user = await User.findByPk(decoded.userId, { include: Status });
     if (!user) return res.status(401).json({ message: "用户不存在" });
 
+    if (user.isBanned) {
+      return res.status(403).json({ message: "账号已被封禁，请联系管理员" });
+    }
+
+    if (!user.isApproved && user.Status.name !== "admin") {
+      return res.status(403).json({ message: "账号待审核，请等待管理员通过" });
+    }
+
     req.user = user;
     next();
   } catch (err) {

@@ -65,63 +65,6 @@ router.get("/vote/issue/:id/songs", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/issue/:id/show-list", authMiddleware, async (req, res) => {
-  try {
-    const issueId = req.params.id;
-    const issue = await Issue.findByPk(issueId);
-
-    if (!issue || issue.status !== "published") {
-      return res.status(403).json({ message: "无权限查看该稿件" });
-    }
-
-    const songs = await PublicSong.findAll({
-      where: { issueId, isReviewSelected: true }, // 只显示已选入文案池的歌曲
-      order: [["id", "ASC"]],
-    });
-
-    const votes = await Vote.findAll({ where: { issueId } });
-    const voteMap = {};
-    for (const v of votes) {
-      voteMap[v.songId] = (voteMap[v.songId] || 0) + v.voteCount;
-    }
-
-    const copies = await Copy.findAll({
-      where: { issueId },
-      include: [{ model: User, attributes: ["id", "username", "nickname"] }],
-    });
-
-    const copyMap = {};
-    for (const c of copies) {
-      copyMap[c.songId] = c;
-    }
-
-    // 只展示有文案的歌曲
-    const result = songs
-      .map((song) => ({
-        ...song.toJSON(),
-        totalVotes: voteMap[song.id] || 0,
-        copy: copyMap[song.id]
-          ? {
-              id: copyMap[song.id].id,
-              content: copyMap[song.id].content,
-              isSubmitted: copyMap[song.id].isSubmitted,
-              userId: copyMap[song.id].userId,
-              nickname: copyMap[song.id].User?.nickname || "",
-            }
-          : null,
-      }))
-      .filter((song) => song.copy); // 过滤出已完成文案的歌曲
-
-    res.json({
-      issue,
-      songs: result,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "获取文案数据失败" });
-  }
-});
-
 // 重置投票
 router.post("/vote/issue/:id/reset", authMiddleware, async (req, res) => {
   try {
@@ -167,7 +110,7 @@ router.post("/vote/issue/:id/submit", authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const user = req.user;
 
-    const isCopyTeam = user.group === "文案组";
+    const isCopyTeam = user.Status.name === "文案组";
     let maxVote = isCopyTeam ? 1 : 3;
 
     if (voteCount < 1 || voteCount > maxVote) {
