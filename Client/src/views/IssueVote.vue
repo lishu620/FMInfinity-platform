@@ -57,7 +57,7 @@
                 v-model="mySongScores[song.id]"
                 :max="maxVote"
                 show-text
-                :texts="['1 票', '2 票', '3 票']"
+                :texts="rateTexts"
               />
             </div>
 
@@ -137,7 +137,7 @@ const mySongScores = ref({});
 const userVotedList = ref([]);
 
 const maxVote = computed(() => {
-  return authStore.user?.group === "文案组" ? 1 : 3;
+  return authStore.maxVote;
 });
 
 const isVoted = (songId) => {
@@ -255,6 +255,14 @@ const submitVote = async (song) => {
     ElMessage.error(e?.response?.data?.message || "投票失败");
   }
 };
+
+const rateTexts = computed(() => {
+  const texts = [];
+  for (let i = 1; i <= maxVote.value; i++) {
+    texts.push(`${i} 票`);
+  }
+  return texts;
+});
 
 const handleDialogClose = (done) => {
   mySongScores.value = {};

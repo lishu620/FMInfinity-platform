@@ -76,6 +76,7 @@ export const useAuthStore = defineStore("auth", {
     isLoggedIn: (state) => !!state.token,
     isSuperAdmin: (state) => state.user?.isSuperAdmin || false,
     isGroupAdmin: (state) => state.user?.isGroupAdmin || false,
+    maxVote: (state) => state.user?.maxVote || 3,
   },
 });
 

@@ -10,6 +10,9 @@
           <el-form-item label="组名">
             <el-input v-model="newGroup.name" placeholder="如：文案组" />
           </el-form-item>
+          <el-form-item label="投票限额">
+            <el-input-number v-model="newGroup.maxVote" :min="1" :max="10" />
+          </el-form-item>
           <el-form-item label="描述">
             <el-input
               v-model="newGroup.description"
@@ -32,6 +35,8 @@
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="组名" />
         <el-table-column prop="description" label="描述" />
+        <el-table-column prop="maxVote" label="投票限额" width="100" />
+
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="editGroup(row)"
@@ -79,6 +84,9 @@
             :rows="3"
           />
         </el-form-item>
+        <el-form-item label="投票限额">
+          <el-input-number v-model="editingGroup.maxVote" :min="1" :max="10" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="editDialogVisible = false">取消</el-button>
@@ -94,7 +102,7 @@ import api from "@/store/auth";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 const groupList = ref([]);
-const newGroup = ref({ name: "", description: "" });
+const newGroup = ref({ name: "", description: "", maxVote: 3 });
 const editingGroup = ref({ id: null, name: "", description: "" });
 const editDialogVisible = ref(false);
 const adminDialogVisible = ref(false);

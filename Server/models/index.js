@@ -13,6 +13,11 @@ const Status = sequelize.define("Status", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, allowNull: false, unique: true },
   description: { type: DataTypes.TEXT },
+  maxVote: {
+    type: DataTypes.INTEGER,
+    defaultValue: 3,
+    validate: { min: 1, max: 10 },
+  },
 });
 
 // 2. 用户表
@@ -118,6 +123,7 @@ Issue.hasMany(Vote, { foreignKey: "issueId" });
 Vote.belongsTo(Issue, { foreignKey: "issueId" });
 Vote.belongsTo(User, { foreignKey: "userId" });
 Vote.belongsTo(PublicSong, { foreignKey: "songId" });
+PublicSong.hasMany(Vote, { foreignKey: "songId" });
 
 Issue.hasMany(Copy, { foreignKey: "issueId" });
 Copy.belongsTo(Issue, { foreignKey: "issueId" });
@@ -154,12 +160,12 @@ const initDB = async () => {
 
   const [adminGroup] = await Status.findOrCreate({
     where: { name: "admin" },
-    defaults: { description: "超级管理员组" },
+    defaults: { description: "超级管理员组", maxVote: 3 },
   });
 
   const [copyGroup] = await Status.findOrCreate({
     where: { name: "文案组" },
-    defaults: { description: "文案编辑组" },
+    defaults: { description: "文案编辑组", maxVote: 1 },
   });
 
   const bcrypt = require("bcryptjs");

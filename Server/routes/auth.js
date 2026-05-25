@@ -43,6 +43,7 @@ router.post("/login", async (req, res) => {
       isGroupAdmin: user.isGroupAdmin,
       isSuperAdmin: user.Status.name === "admin",
       isBanned: user.isBanned,
+      maxVote: user.Status.maxVote,
     },
   });
 });
@@ -56,6 +57,7 @@ router.get("/me", authMiddleware, (req, res) => {
     group: req.user.Status.name,
     isGroupAdmin: req.user.isGroupAdmin,
     isSuperAdmin: req.user.Status.name === "admin",
+    maxVote: req.user.Status.maxVote,
   });
 });
 
@@ -195,29 +197,33 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// ==============================================
-// 👇 组管理功能（仅超级管理员可操作）
-// ==============================================
-
 // 创建用户组
 router.post("/status", authMiddleware, isSuperAdmin, async (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, maxVote } = req.body;
   const exist = await Status.findOne({ where: { name } });
+
   if (exist) return res.status(400).json({ message: "组名已存在" });
-  const status = await Status.create({ name, description });
+
+  const status = await Status.create({
+    name,
+    description,
+    maxVote: maxVote || 3,
+  });
   res.json(status);
 });
 
 // 更新用户组
 router.put("/status/:id", authMiddleware, isSuperAdmin, async (req, res) => {
   const { id } = req.params;
-  const { name, description } = req.body;
-
+  const { name, description, maxVote } = req.body;
   const status = await Status.findByPk(id);
+
   if (!status) return res.status(404).json({ message: "组不存在" });
 
   if (name) status.name = name;
   if (description) status.description = description;
+  if (maxVote !== undefined) status.maxVote = maxVote;
+
   await status.save();
 
   res.json(status);

@@ -110,8 +110,7 @@ router.post("/vote/issue/:id/submit", authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const user = req.user;
 
-    const isCopyTeam = user.Status.name === "文案组";
-    let maxVote = isCopyTeam ? 1 : 3;
+    const maxVote = req.user.Status.maxVote;
 
     if (voteCount < 1 || voteCount > maxVote) {
       return res.status(400).json({ message: `最多可投 ${maxVote} 票` });
