@@ -61,14 +61,15 @@ async function sendNotice(params) {
   }
 }
 
-// 稿件状态变更
+// 稿件状态变更（仅通知文案组和管理员，避免全量广播）
 async function sendIssueStatusNotice(issue, newStatus, sendUid) {
   const title = "稿件状态变更通知";
   const content = `【${issue.title}】状态已变更为：${STATUS_MAP[newStatus]}`;
 
+  // 先通知文案组
   await sendNotice({
-    type: "all",
-    target: null,
+    type: "group",
+    target: "文案组",
     title,
     content,
     bizType: "issue_status",
@@ -76,6 +77,20 @@ async function sendIssueStatusNotice(issue, newStatus, sendUid) {
     jumpPath: "/review",
     sendUserId: sendUid,
   });
+
+  // 如果状态变为 voting，额外通知所有用户
+  if (newStatus === "voting" || newStatus === "published") {
+    await sendNotice({
+      type: "all",
+      target: null,
+      title,
+      content,
+      bizType: "issue_status",
+      bizId: issue.id,
+      jumpPath: newStatus === "voting" ? "/vote" : "/show",
+      sendUserId: sendUid,
+    });
+  }
 }
 
 module.exports = {

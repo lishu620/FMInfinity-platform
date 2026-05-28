@@ -147,7 +147,7 @@ router.get("/issue/:id/songs", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/issue/:id/songs/vote-count", async (req, res) => {
+router.get("/issue/:id/songs/vote-count", authMiddleware, async (req, res) => {
   try {
     const issueId = req.params.id;
     const songs = await PublicSong.findAll({
@@ -161,13 +161,13 @@ router.get("/issue/:id/songs/vote-count", async (req, res) => {
         },
       ],
       group: ["PublicSong.id"],
-      order: [[sequelize.fn("COUNT", sequelize.col("Votes.id")), "DESC"]], // 排序
+      order: [[sequelize.fn("COUNT", sequelize.col("Votes.id")), "DESC"]],
     });
 
-    res.json(songs); // 返回按票数排序的歌曲
+    res.json(songs);
   } catch (err) {
-    console.error("Error in /issue/:id/songs/vote-count:", err); // 打印详细错误日志
-    res.status(500).json({ message: "获取歌曲失败", error: err.message });
+    console.error("Error in /issue/:id/songs/vote-count:", err);
+    res.status(500).json({ message: "获取歌曲失败" });
   }
 });
 
@@ -186,6 +186,21 @@ router.delete("/issue/:id", authMiddleware, isSuperAdmin, async (req, res) => {
     // 1. 先删除所有关联数据，避免外键报错
     await Copy.destroy({ where: { issueId: id }, transaction: t });
     await Vote.destroy({ where: { issueId: id }, transaction: t });
+    // 清理 SongVsinger 关联（先查本期所有歌曲ID再删中间表）
+    const songIds = (
+      await PublicSong.findAll({
+        where: { issueId: id },
+        attributes: ["id"],
+        transaction: t,
+      })
+    ).map((s) => s.id);
+    if (songIds.length > 0) {
+      const { SongVsinger } = require("../models");
+      await SongVsinger.destroy({
+        where: { songId: songIds },
+        transaction: t,
+      });
+    }
     await PublicSong.destroy({ where: { issueId: id }, transaction: t });
     await IssueAdmin.destroy({ where: { issueId: id }, transaction: t });
 
@@ -281,7 +296,8 @@ router.delete(
   isIssueAdmin,
   async (req, res) => {
     try {
-      await PublicSong.destroy({ where: { id: req.params.songId } });
+      const { id: issueId, songId } = req.params;
+      await PublicSong.destroy({ where: { id: songId, issueId } });
       res.json({ message: "删除成功" });
     } catch (err) {
       res.status(500).json({ message: "删除失败" });
@@ -588,7 +604,7 @@ router.get("/issue/:id/show", authMiddleware, async (req, res) => {
     return res.json({ songs: result });
   } catch (err) {
     console.error("【/issue/:id/show 错误详情】", err);
-    return res.status(500).json({ message: "加载失败", error: err.message });
+    return res.status(500).json({ message: "加载失败" });
   }
 });
 

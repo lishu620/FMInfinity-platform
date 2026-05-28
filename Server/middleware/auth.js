@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 const { User, Status } = require("../models");
 
-const JWT_SECRET = process.env.JWT_SECRET || "music-vote-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.error("!!! [安全警告] 未设置 JWT_SECRET 环境变量，使用回退密钥。生产环境请务必设置 JWT_SECRET !!!");
+  return "music-vote-secret-key";
+})();
 
 // 验证登录
 const authMiddleware = async (req, res, next) => {

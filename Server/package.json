@@ -1,6 +1,6 @@
 {
   "name": "FMInfinity-Server",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "",
   "main": "index.js",
   "scripts": {

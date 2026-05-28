@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authMiddleware } = require("../middleware/auth");
-const { Issue, PublicSong, Vote, User, Vsinger } = require("../models");
+const { Issue, PublicSong, Vote, User, Vsinger, sequelize } = require("../models");
 
 // 获取【所有投票中】的稿件列表
 router.get("/vote/issues", authMiddleware, async (req, res) => {
@@ -65,12 +65,18 @@ router.get("/vote/issue/:id/songs", authMiddleware, async (req, res) => {
   }
 });
 
-// 重置投票
+// 重置投票（仅投票中可重置）
 router.post("/vote/issue/:id/reset", authMiddleware, async (req, res) => {
   try {
     const { songId } = req.body;
     const issueId = req.params.id;
     const userId = req.user.id;
+
+    const issue = await Issue.findByPk(issueId);
+    if (!issue) return res.status(404).json({ message: "稿件不存在" });
+    if (issue.status !== "voting") {
+      return res.status(400).json({ message: "当前稿件不在投票阶段" });
+    }
 
     await Vote.destroy({
       where: {
@@ -102,35 +108,70 @@ router.get("/vote/issue/:id/my-vote", authMiddleware, async (req, res) => {
   }
 });
 
-// 提交投票
+// 提交投票（事务保护 + 总票数上限 + 状态检查）
 router.post("/vote/issue/:id/submit", authMiddleware, async (req, res) => {
+  const t = await sequelize.transaction();
   try {
     const { songId, voteCount = 1 } = req.body;
     const issueId = req.params.id;
     const userId = req.user.id;
-    const user = req.user;
-
     const maxVote = req.user.Status.maxVote;
 
-    if (voteCount < 1 || voteCount > maxVote) {
-      return res.status(400).json({ message: `最多可投 ${maxVote} 票` });
+    // 状态检查：仅 voting 阶段可投票
+    const issue = await Issue.findByPk(issueId, { transaction: t });
+    if (!issue) {
+      await t.rollback();
+      return res.status(404).json({ message: "稿件不存在" });
+    }
+    if (issue.status !== "voting") {
+      await t.rollback();
+      return res.status(400).json({ message: "当前稿件不在投票阶段" });
     }
 
-    // 先删除这首歌的旧投票
+    if (voteCount < 1 || voteCount > maxVote) {
+      await t.rollback();
+      return res.status(400).json({ message: `单首歌最多可投 ${maxVote} 票` });
+    }
+
+    // 检查该期总投票数上限（每期总票数 = maxVote * 可选歌曲数，但合理上限为 maxVote * 3）
+    const myVotes = await Vote.findAll({
+      where: { issueId, userId },
+      transaction: t,
+    });
+    const currentTotal = myVotes.reduce((sum, v) => sum + v.voteCount, 0);
+    // 排除当前歌曲的旧投票（如果存在）
+    const existingVote = myVotes.find((v) => v.songId === songId);
+    const existingCount = existingVote ? existingVote.voteCount : 0;
+    const newTotal = currentTotal - existingCount + voteCount;
+
+    if (newTotal > maxVote) {
+      await t.rollback();
+      return res
+        .status(400)
+        .json({ message: `本期总投票数不能超过 ${maxVote} 票` });
+    }
+
+    // 删除这首歌的旧投票
     await Vote.destroy({
       where: { issueId, userId, songId },
+      transaction: t,
     });
 
     // 提交这首歌的投票
-    await Vote.create({
-      issueId,
-      userId,
-      songId,
-      voteCount,
-    });
+    await Vote.create(
+      {
+        issueId,
+        userId,
+        songId,
+        voteCount,
+      },
+      { transaction: t },
+    );
 
+    await t.commit();
     res.json({ message: "投票成功" });
   } catch (err) {
+    await t.rollback();
     console.error(err);
     res.status(500).json({ message: "投票失败" });
   }

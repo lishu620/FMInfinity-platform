@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const { User, Status } = require("../models");
 const { Op } = require("sequelize");
 const {
@@ -141,10 +142,11 @@ router.put("/user/:id/reset-pwd", authMiddleware, async (req, res) => {
       }
     }
 
-    targetUser.password = await bcrypt.hash("admin@123", 10);
+    const newPassword = crypto.randomBytes(8).toString("hex");
+    targetUser.password = await bcrypt.hash(newPassword, 10);
     await targetUser.save();
 
-    res.json({ message: "密码已重置为admin@123" });
+    res.json({ message: "密码已重置", newPassword });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "重置密码失败" });
@@ -176,9 +178,15 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "请选择用户组" });
     }
 
+    // 密码强度校验：至少6位
+    if (!password || password.length < 6) {
+      return res.status(400).json({ message: "密码长度不能少于6位" });
+    }
+
     const exist = await User.findOne({ where: { username } });
     if (exist) {
-      return res.status(400).json({ message: "账号已存在" });
+      // 避免用户枚举，返回模糊消息
+      return res.status(200).json({ message: "注册成功，请等待管理员审核" });
     }
 
     const hashedPwd = await bcrypt.hash(password, 10);
