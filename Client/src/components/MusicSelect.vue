@@ -1,9 +1,9 @@
 <template>
   <div class="music-select">
-    <h2 class="section-title">文案填写歌曲信息</h2>
+    <h2 class="section-title">歌曲信息补充</h2>
 
     <div class="tip" v-if="isCopyMember || authStore.isSuperAdmin">
-      点击歌曲卡片填写歌手、平台、链接等信息，所有歌曲均可填写
+      点击歌曲卡片补充歌手、平台、链接等信息
     </div>
 
     <!-- 歌曲信息填写网格 -->
@@ -30,7 +30,7 @@
     <!-- 填写信息弹窗 -->
     <el-dialog
       v-model="showDialog"
-      title="填写歌曲信息"
+      title="补充信息"
       width="550px"
       :close-on-click-modal="false"
     >

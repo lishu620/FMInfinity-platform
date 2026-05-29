@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <h1 class="page-title">稿件投票</h1>
-    <p class="tip">文案组可投 1 票，其他成员可投 1~3 票</p>
+    <p class="tip">每首歌最多可投 {{ maxVote }} 票，可对多首歌曲分别投票</p>
 
     <div class="issue-list">
       <div

@@ -169,7 +169,7 @@ const getEmbedUrl = (link, type) => {
 const statusText = (status) => {
   const map = {
     draft: "草稿",
-    submitting: "填写歌曲信息",
+    submitting: "补充信息",
     voting: "投票中",
     confirmed: "已确认",
     published: "已发布",

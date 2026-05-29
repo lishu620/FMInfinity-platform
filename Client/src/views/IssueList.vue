@@ -95,7 +95,7 @@ const newIssueTitle = ref("音乐推荐");
 const getStatusText = (status) => {
   const statusMap = {
     draft: "预处理",
-    submitting: "文案填写歌曲信息",
+    submitting: "歌曲信息补充",
     voting: "投票",
     confirmed: "文案编写",
     published: "稿件发布",

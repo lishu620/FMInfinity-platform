@@ -132,24 +132,6 @@ router.post("/vote/issue/:id/submit", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: `单首歌最多可投 ${maxVote} 票` });
     }
 
-    // 检查该期总投票数上限（每期总票数 = maxVote * 可选歌曲数，但合理上限为 maxVote * 3）
-    const myVotes = await Vote.findAll({
-      where: { issueId, userId },
-      transaction: t,
-    });
-    const currentTotal = myVotes.reduce((sum, v) => sum + v.voteCount, 0);
-    // 排除当前歌曲的旧投票（如果存在）
-    const existingVote = myVotes.find((v) => v.songId === songId);
-    const existingCount = existingVote ? existingVote.voteCount : 0;
-    const newTotal = currentTotal - existingCount + voteCount;
-
-    if (newTotal > maxVote) {
-      await t.rollback();
-      return res
-        .status(400)
-        .json({ message: `本期总投票数不能超过 ${maxVote} 票` });
-    }
-
     // 删除这首歌的旧投票
     await Vote.destroy({
       where: { issueId, userId, songId },
