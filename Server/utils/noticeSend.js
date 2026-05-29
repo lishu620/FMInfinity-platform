@@ -1,4 +1,5 @@
 const { User, Status, Notice } = require("../models");
+const noticeEventBus = require("./noticeEventBus");
 
 const STATUS_MAP = {
   draft: "草稿",
@@ -52,7 +53,12 @@ async function sendNotice(params) {
     }));
 
     if (Notice && Notice.bulkCreate) {
-      await Notice.bulkCreate(noticeData);
+      const createdNotices = await Notice.bulkCreate(noticeData);
+
+      // SSE 实时推送：向每个接收用户发送通知
+      for (const notice of createdNotices) {
+        noticeEventBus.emitToUser(notice.receiveUserId, notice.toJSON());
+      }
     } else {
       console.error("Error: Notice 模型未加载");
     }

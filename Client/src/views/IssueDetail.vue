@@ -39,7 +39,7 @@
             :disabled="!isAdminOrIssueAdmin"
           >
             <el-option label="预处理" value="draft" />
-            <el-option label="文案选歌" value="submitting" />
+            <el-option label="文案填写歌曲信息" value="submitting" />
             <el-option label="投票" value="voting" />
             <el-option label="文案编写" value="confirmed" />
             <el-option label="稿件发布" value="published" />
@@ -225,7 +225,7 @@ const isAdminOrIssueAdmin = computed(() => {
 const statusText = computed(() => {
   const map = {
     draft: "草稿",
-    submitting: "提交中",
+    submitting: "填写歌曲信息",
     voting: "投票中",
     confirmed: "已确认",
     published: "已发布",

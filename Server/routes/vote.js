@@ -17,13 +17,12 @@ router.get("/vote/issues", authMiddleware, async (req, res) => {
   }
 });
 
-// 获取单个稿件的【所有可投票歌曲】
+// 获取单个稿件的【所有可投票歌曲】（全部本期歌曲均可投票）
 router.get("/vote/issue/:id/songs", authMiddleware, async (req, res) => {
   try {
     const songs = await PublicSong.findAll({
       where: {
         issueId: req.params.id,
-        isSelected: true,
       },
       include: [
         {

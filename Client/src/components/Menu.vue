@@ -46,8 +46,8 @@
 
       <template v-else>
         <!-- 通知按钮 -->
-        <el-menu-item index="9" @click.native="openNoticeDrawer">
-          <el-badge :value="noticeCount" :max="99" class="notice-badge">
+        <el-menu-item index="9" @click.native="noticeStore.isDrawerOpen = true">
+          <el-badge :value="noticeStore.unReadCount" :max="99" class="notice-badge">
             通知
           </el-badge>
         </el-menu-item>
@@ -60,46 +60,70 @@
 
   <!-- 右侧通知抽屉 -->
   <el-drawer
-    v-model="noticeDrawerVisible"
+    v-model="noticeStore.isDrawerOpen"
     title="系统通知"
     direction="rtl"
     size="400px"
-    @open="loadNoticeList"
+    @open="noticeStore.loadNoticeList"
   >
+    <template #header>
+      <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+        <span>系统通知</span>
+        <el-button
+          v-if="noticeStore.noticeList.length > 0"
+          type="primary"
+          text
+          size="small"
+          @click="noticeStore.readAll"
+        >
+          全部已读
+        </el-button>
+      </div>
+    </template>
+
     <div class="notice-container">
-      <div v-if="noticeList.length === 0" class="empty-notice">
-        暂无通知消息
+      <div v-if="noticeStore.noticeList.length === 0" class="empty-notice">
+        <el-empty description="暂无通知消息" :image-size="80" />
       </div>
       <div
         v-else
         class="notice-item"
-        v-for="item in noticeList"
+        :class="{ 'is-read': item.isRead }"
+        v-for="item in noticeStore.noticeList"
         :key="item.id"
-        @click="readNotice(item)"
       >
-        <div class="notice-title">{{ item.title }}</div>
-        <div class="notice-content">{{ item.content }}</div>
-        <div class="notice-time">{{ item.createdAt }}</div>
+        <div class="notice-item-header">
+          <el-badge :is-dot="!item.isRead" class="notice-dot" />
+          <div class="notice-title" @click="handleNoticeClick(item)">{{ item.title }}</div>
+          <el-button
+            type="danger"
+            text
+            size="small"
+            circle
+            @click.stop="noticeStore.deleteNotice(item.id)"
+            class="notice-delete-btn"
+          >
+            ✕
+          </el-button>
+        </div>
+        <div class="notice-content" @click="handleNoticeClick(item)">{{ item.content }}</div>
+        <div class="notice-time">{{ formatTime(item.createdAt) }}</div>
       </div>
     </div>
   </el-drawer>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
+import { useNotificationStore } from "@/store/notification";
 import { ElMessage } from "element-plus";
-import axios from "axios"; // ✅ 修复：引入 axios
 
 const router = useRouter();
 const authStore = useAuthStore();
+const noticeStore = useNotificationStore();
 const activeIndex = ref("1");
-
-// 通知相关
-const noticeDrawerVisible = ref(false);
-const noticeCount = ref(0);
-const noticeList = ref([]);
 
 // 问候语
 const greeting = computed(() => {
@@ -111,45 +135,36 @@ const greeting = computed(() => {
   return "凌晨好";
 });
 
-// 打开通知抽屉
-const openNoticeDrawer = () => {
-  noticeDrawerVisible.value = true;
-};
+// 格式化时间
+function formatTime(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return "刚刚";
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${month}-${day} ${hours}:${minutes}`;
+}
 
-// 加载通知（终极版，带 token）
-const loadNoticeList = async () => {
-  if (!authStore.isLoggedIn) return;
-  try {
-    const res = await axios.get("/api/notice/list", {
-      headers: {
-        Authorization: `Bearer ${authStore.token}`,
-      },
-    });
-    noticeList.value = res.data.list;
-    noticeCount.value = res.data.unReadCount;
-  } catch (err) {
-    console.error("加载通知失败", err);
+// 点击通知：标记已读 + 跳转
+function handleNoticeClick(item) {
+  noticeStore.readNotice(item);
+  if (item.jumpPath) {
+    noticeStore.isDrawerOpen = false;
+    router.push(item.jumpPath);
   }
-};
+}
 
-// 标记已读（终极版，带 token）
-const readNotice = async (item) => {
-  try {
-    await axios.post(
-      `/api/notice/read/${item.id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${authStore.token}`,
-        },
-      },
-    );
-    item.isRead = true;
-    noticeCount.value = Math.max(0, noticeCount.value - 1);
-    ElMessage.success("已读通知");
-  } catch (err) {
-    console.error("标记已读失败", err);
-  }
+// 注销
+const logout = () => {
+  authStore.logout();
+  noticeStore.clear();
+  router.push("/login");
 };
 
 // 菜单路由
@@ -195,15 +210,7 @@ const handleSelect = (key) => {
   }
 };
 
-// 注销
-const logout = () => {
-  authStore.logout();
-  router.push("/login");
-  noticeCount.value = 0;
-  noticeList.value = [];
-};
-
-// 路由高亮 + ✅ 修复：页面加载时自动获取通知（角标显示）
+// 路由高亮
 onMounted(() => {
   const path = router.currentRoute.value.path;
   if (path === "/") activeIndex.value = "1";
@@ -211,12 +218,21 @@ onMounted(() => {
   if (path === "/vote") activeIndex.value = "4";
   if (path === "/admin-console") activeIndex.value = "3-1";
   if (path === "/profile") activeIndex.value = "11";
-
-  // ✅ 页面加载就获取通知
-  if (authStore.isLoggedIn) {
-    loadNoticeList();
-  }
 });
+
+// 监听登录状态：登录后连接SSE并加载通知，退出后断开
+watch(
+  () => authStore.isLoggedIn,
+  (loggedIn) => {
+    if (loggedIn) {
+      noticeStore.connectSSE();
+      noticeStore.loadNoticeList();
+    } else {
+      noticeStore.clear();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
@@ -255,28 +271,58 @@ onMounted(() => {
 .notice-item {
   padding: 15px;
   border-bottom: 1px solid #eee;
-  cursor: pointer;
   transition: background 0.3s;
+  border-radius: 6px;
+  margin-bottom: 4px;
 }
 
 .notice-item:hover {
   background-color: #f5f7fa;
 }
 
+.notice-item.is-read {
+  opacity: 0.65;
+}
+
+.notice-item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.notice-dot {
+  flex-shrink: 0;
+}
+
 .notice-title {
   font-weight: bold;
-  margin-bottom: 5px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.notice-delete-btn {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.notice-item:hover .notice-delete-btn {
+  opacity: 1;
 }
 
 .notice-content {
   color: #666;
   font-size: 13px;
   margin-bottom: 5px;
+  padding-left: 16px;
+  cursor: pointer;
 }
 
 .notice-time {
   color: #999;
   font-size: 12px;
+  padding-left: 16px;
 }
 
 .empty-notice {

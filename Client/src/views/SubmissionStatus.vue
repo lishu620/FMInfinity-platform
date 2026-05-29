@@ -25,7 +25,7 @@
             process-status="primary"
           >
             <el-step title="预处理" />
-            <el-step title="文案选歌" />
+            <el-step title="文案填写歌曲信息" />
             <el-step title="投票" />
             <el-step title="文案编写" />
             <el-step title="稿件发布" />
@@ -72,7 +72,7 @@ const getStepActive = (status) => {
 const statusText = (status) => {
   const map = {
     draft: "预处理",
-    submitting: "文案选歌",
+    submitting: "文案填写歌曲信息",
     voting: "投票",
     confirmed: "文案编写",
     published: "稿件发布",

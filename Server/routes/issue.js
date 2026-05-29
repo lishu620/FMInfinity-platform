@@ -13,6 +13,7 @@ const {
   User,
   Vote,
   Copy,
+  Vsinger,
 } = require("../models");
 
 // 获取所有稿件
@@ -129,7 +130,6 @@ router.post(
 router.get("/issue/:id/songs", authMiddleware, async (req, res) => {
   try {
     const issueId = req.params.id;
-    const { Vsinger } = require("../models");
 
     const songs = await PublicSong.findAll({
       where: { issueId },
@@ -452,6 +452,9 @@ router.get("/issue/:id/review", authMiddleware, async (req, res) => {
     const songs = await PublicSong.findAll({
       where: { issueId, isReviewSelected: true },
       order: [["id", "ASC"]],
+      include: [
+        { model: Vsinger, as: "vsingers" },
+      ],
     });
 
     const votes = await Vote.findAll({ where: { issueId } });
@@ -570,6 +573,9 @@ router.get("/issue/:id/show", authMiddleware, async (req, res) => {
     const songs = await PublicSong.findAll({
       where: { issueId: id, isReviewSelected: true },
       order: [["id", "ASC"]],
+      include: [
+        { model: Vsinger, as: "vsingers" },
+      ],
     });
 
     // 3. 单独查询票数

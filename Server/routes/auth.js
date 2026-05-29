@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { User, Status } = require("../models");
 const { Op } = require("sequelize");
+const { sendNotice } = require("../utils/noticeSend");
 const {
   authMiddleware,
   isSuperAdmin,
@@ -34,6 +35,19 @@ router.post("/login", async (req, res) => {
   }
 
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+
+  // 登录通知：异步发送给管理员，不阻塞登录
+  sendNotice({
+    type: "group",
+    target: "admin",
+    title: "用户登录通知",
+    content: `${user.nickname}（${user.username}）已登录系统`,
+    bizType: "user_login",
+    bizId: user.id,
+    jumpPath: "/admin-console",
+    sendUserId: user.id,
+  }).catch((err) => console.error("发送登录通知失败:", err));
+
   res.json({
     token,
     user: {

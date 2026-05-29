@@ -56,7 +56,9 @@
               <div class="votes-badge">总票数：{{ song.totalVotes || 0 }}</div>
 
               <div class="song-name">{{ song.name }}</div>
-              <div class="song-meta">歌手：{{ song.artist || "未知" }}</div>
+              <div class="song-meta">
+                歌手：{{ song.vsingers?.map(v => v.vsingerName).join(' / ') || "未知" }}
+              </div>
               <div class="song-meta">
                 推荐人：{{ song.submitter || "未知" }}
               </div>
@@ -167,7 +169,7 @@ const getEmbedUrl = (link, type) => {
 const statusText = (status) => {
   const map = {
     draft: "草稿",
-    submitting: "提交中",
+    submitting: "填写歌曲信息",
     voting: "投票中",
     confirmed: "已确认",
     published: "已发布",
