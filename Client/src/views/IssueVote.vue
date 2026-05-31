@@ -26,7 +26,9 @@
       :close-on-click-modal="false"
       :before-close="handleDialogClose"
     >
-      <div class="song-vote-card" v-for="song in currentSongs" :key="song.id">
+      <el-tabs v-model="activeTab" type="border-card">
+        <el-tab-pane label="歌曲投票" name="songVote">
+          <div class="song-vote-card" v-for="song in currentSongs" :key="song.id">
         <div class="card-body">
           <div class="info-side">
             <div class="votes-badge">
@@ -116,6 +118,31 @@
       <div style="text-align: right; margin-top: 16px">
         <el-button @click="voteModalVisible = false">关闭</el-button>
       </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="个人投票统计" name="userStats">
+          <div class="user-stats-table" v-if="userStats.length > 0">
+            <el-table :data="userStats" stripe border style="width: 100%" max-height="500">
+              <el-table-column type="index" label="排名" width="60" align="center" />
+              <el-table-column prop="nickname" label="用户昵称" min-width="150" />
+              <el-table-column prop="username" label="用户名" min-width="120" />
+              <el-table-column prop="totalVotes" label="总投票数" width="120" align="center" sortable>
+                <template #default="{ row }">
+                  <el-tag type="danger" size="large">{{ row.totalVotes }} 票</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="votedSongs" label="已投票歌曲数" width="130" align="center" sortable>
+                <template #default="{ row }">
+                  <span>{{ row.votedSongs }} 首</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="empty" v-else>
+            暂无投票数据
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
   </div>
 </template>
@@ -135,6 +162,8 @@ const currentSongs = ref([]);
 const voteResultMap = ref({});
 const mySongScores = ref({});
 const userVotedList = ref([]);
+const activeTab = ref("songVote");
+const userStats = ref([]);
 
 const maxVote = computed(() => {
   return authStore.maxVote;
@@ -182,6 +211,9 @@ const resetVote = async (song) => {
 
     const r = await api.get(`/vote/issue/${issueId}/result`);
     voteResultMap.value[issueId] = r.data || {};
+
+    const stats = await api.get(`/vote/issue/${issueId}/user-stats`);
+    userStats.value = stats.data || [];
   } catch (e) {
     console.error(e);
     ElMessage.error(e?.response?.data?.message || "重置投票失败");
@@ -218,6 +250,9 @@ const openVoteModal = async (issue) => {
 
     const r = await api.get(`/vote/issue/${issue.id}/result`);
     voteResultMap.value[issue.id] = r.data || {};
+
+    const stats = await api.get(`/vote/issue/${issue.id}/user-stats`);
+    userStats.value = stats.data || [];
   } catch (e) {
     console.error(e);
     ElMessage.error("加载投票数据失败");
@@ -250,6 +285,9 @@ const submitVote = async (song) => {
 
     const r = await api.get(`/vote/issue/${issueId}/result`);
     voteResultMap.value[issueId] = r.data || {};
+
+    const stats = await api.get(`/vote/issue/${issueId}/user-stats`);
+    userStats.value = stats.data || [];
   } catch (e) {
     console.error(e);
     ElMessage.error(e?.response?.data?.message || "投票失败");
@@ -269,6 +307,8 @@ const handleDialogClose = (done) => {
   userVotedList.value = [];
   currentSongs.value = [];
   currentIssue.value = { id: null };
+  activeTab.value = "songVote";
+  userStats.value = [];
   done();
 };
 
@@ -377,6 +417,20 @@ onMounted(() => loadVotingIssues());
 .player-container {
   border-radius: 8px;
   overflow: hidden;
+}
+.user-stats-table {
+  margin-top: 8px;
+}
+:deep(.el-tabs--border-card) {
+  border: none;
+  box-shadow: none;
+}
+:deep(.el-tabs--border-card > .el-tabs__header) {
+  background: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid #e4e7ed;
+}
+:deep(.el-tabs--border-card > .el-tabs__content) {
+  padding: 16px 0;
 }
 .no-player {
   padding: 60px;

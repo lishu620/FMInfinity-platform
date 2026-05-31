@@ -176,4 +176,43 @@ router.get("/vote/issue/:id/result", authMiddleware, async (req, res) => {
   }
 });
 
+// 获取本期所有用户的个人投票统计（每用户总票数）
+router.get("/vote/issue/:id/user-stats", authMiddleware, async (req, res) => {
+  try {
+    const votes = await Vote.findAll({
+      where: { issueId: req.params.id },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname", "username"],
+        },
+      ],
+    });
+
+    // 按用户聚合投票数
+    const userMap = {};
+    votes.forEach((v) => {
+      if (!v.User) return;
+      const uid = v.userId;
+      if (!userMap[uid]) {
+        userMap[uid] = {
+          userId: uid,
+          nickname: v.User.nickname,
+          username: v.User.username,
+          totalVotes: 0,
+          votedSongs: 0,
+        };
+      }
+      userMap[uid].totalVotes += v.voteCount;
+      userMap[uid].votedSongs += 1;
+    });
+
+    const result = Object.values(userMap).sort((a, b) => b.totalVotes - a.totalVotes);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "获取个人投票统计失败" });
+  }
+});
+
 module.exports = router;
