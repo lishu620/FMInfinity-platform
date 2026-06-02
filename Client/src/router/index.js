@@ -13,6 +13,7 @@ import SubmissionStatus from "../views/SubmissionStatus.vue";
 import VsingersManager from "../views/VsingersManager.vue";
 import VsingerShow from "../views/VsingerShow.vue";
 import UpdatesView from "../views/UpdatesView.vue";
+import UserStatus from "../views/UserStatus.vue";
 import { pa } from "element-plus/es/locale/index.mjs";
 
 const routes = [
@@ -75,6 +76,11 @@ const routes = [
     path: "/update",
     component: UpdatesView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/user-status",
+    component: UserStatus,
+    meta: { requiresAuth: false },
   },
 ];
 

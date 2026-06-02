@@ -25,6 +25,11 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
+
+    // 更新用户最后活动时间（在线状态追踪）
+    user.lastSeenAt = new Date();
+    user.save().catch((err) => console.error("更新在线状态失败:", err));
+
     next();
   } catch (err) {
     return res.status(401).json({ message: "Token无效" });

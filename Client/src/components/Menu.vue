@@ -28,6 +28,7 @@
       <el-menu-item index="6-1">文案展示</el-menu-item>
       <el-menu-item index="6-2">稿件状态</el-menu-item>
       <el-menu-item index="6-3">歌姬查看</el-menu-item>
+      <el-menu-item index="6-4">用户状态</el-menu-item>
     </el-sub-menu>
 
     <el-sub-menu index="3" v-if="authStore.user?.isGroupAdmin == 1">
@@ -191,6 +192,9 @@ const handleSelect = (key) => {
       break;
     case "6-3":
       router.push("/vsinger-show");
+      break;
+    case "6-4":
+      router.push("/user-status");
       break;
     case "3-1":
       router.push("/admin-console");

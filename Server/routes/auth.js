@@ -477,4 +477,40 @@ router.put("/user/:id/ban", authMiddleware, isSuperAdmin, async (req, res) => {
   }
 });
 
+// 公共查询 - 用户在线状态（无需登录）
+router.get("/users/public-status", async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: [
+        "id",
+        "username",
+        "nickname",
+        "lastSeenAt",
+        "statusId",
+      ],
+      include: { model: Status, attributes: ["name"] },
+      where: { isApproved: true, isBanned: false },
+      order: [["lastSeenAt", "DESC NULLS LAST"]],
+    });
+
+    const ONLINE_THRESHOLD = 5 * 60 * 1000; // 5分钟内视为在线
+    const now = Date.now();
+
+    const result = users.map((user) => ({
+      id: user.id,
+      nickname: user.nickname,
+      group: user.Status?.name || "未知",
+      isOnline: user.lastSeenAt
+        ? (now - new Date(user.lastSeenAt).getTime()) < ONLINE_THRESHOLD
+        : false,
+      lastSeenAt: user.lastSeenAt,
+    }));
+
+    res.json(result);
+  } catch (err) {
+    console.error("获取用户在线状态失败:", err);
+    res.status(500).json({ message: "获取用户在线状态失败" });
+  }
+});
+
 module.exports = router;

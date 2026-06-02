@@ -30,6 +30,7 @@ const User = sequelize.define("User", {
   statusId: { type: DataTypes.INTEGER, allowNull: false },
   isApproved: { type: DataTypes.BOOLEAN, defaultValue: false },
   isBanned: { type: DataTypes.BOOLEAN, defaultValue: false },
+  lastSeenAt: { type: DataTypes.DATE, allowNull: true },
 });
 
 // 3. 稿件表 (每期)
