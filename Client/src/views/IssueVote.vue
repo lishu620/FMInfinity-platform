@@ -322,17 +322,17 @@ onMounted(() => loadVotingIssues());
   gap: 16px;
 }
 .issue-card {
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--card-bg, rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
   border-radius: 12px;
   padding: 20px;
   cursor: pointer;
   transition: background 0.2s;
 }
 .issue-card:hover {
-  background: #e6f7ff;
+  background: var(--primary-color-light, #e6f7ff);
 }
 .title {
   font-weight: bold;
@@ -357,10 +357,10 @@ onMounted(() => loadVotingIssues());
   color: #999;
 }
 .song-vote-card {
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--card-bg, rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
@@ -426,8 +426,8 @@ onMounted(() => loadVotingIssues());
   box-shadow: none;
 }
 :deep(.el-tabs--border-card > .el-tabs__header) {
-  background: rgba(255, 255, 255, 0.5);
-  border-bottom: 1px solid #e4e7ed;
+  background: var(--card-bg, rgba(255, 255, 255, 0.5));
+  border-bottom: 1px solid var(--card-border, #e4e7ed);
 }
 :deep(.el-tabs--border-card > .el-tabs__content) {
   padding: 16px 0;

@@ -11,7 +11,13 @@ import "./styles/public.css";
 import "./styles/issue-list.css";
 
 const app = createApp(App);
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
 app.use(ElementPlus);
 app.mount("#app");
+
+// 初始化主题（必须在 pinia 注册之后）
+import { useThemeStore } from "@/store/theme";
+const themeStore = useThemeStore();
+themeStore.initTheme();

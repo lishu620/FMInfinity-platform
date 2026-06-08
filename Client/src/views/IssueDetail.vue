@@ -450,7 +450,7 @@ const finalizeSongs = async () => {
 }
 
 .issue-detail-box {
-  background: #fff;
+  background: var(--card-bg, #fff);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);

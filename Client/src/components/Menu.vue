@@ -41,6 +41,32 @@
     </el-sub-menu>
 
     <div class="right-menu">
+      <!-- 主题切换 -->
+      <el-menu-item index="theme" class="theme-switch">
+        <el-dropdown trigger="click" @command="handleThemeChange">
+          <span class="theme-trigger" @click.stop>
+            🎨 主题
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item
+                v-for="t in themeStore.themes"
+                :key="t.id"
+                :command="t.id"
+                :class="{ 'is-active': themeStore.currentTheme === t.id }"
+              >
+                <span
+                  class="theme-dot"
+                  :style="{ background: t.primary }"
+                ></span>
+                {{ t.name }}
+                <span v-if="themeStore.currentTheme === t.id">✓</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-menu-item>
+
       <el-menu-item index="10" v-if="!authStore.isLoggedIn" class="login-btn">
         登录
       </el-menu-item>
@@ -119,11 +145,13 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
 import { useNotificationStore } from "@/store/notification";
+import { useThemeStore } from "@/store/theme";
 import { ElMessage } from "element-plus";
 
 const router = useRouter();
 const authStore = useAuthStore();
 const noticeStore = useNotificationStore();
+const themeStore = useThemeStore();
 const activeIndex = ref("1");
 
 // 问候语
@@ -166,6 +194,11 @@ const logout = () => {
   authStore.logout();
   noticeStore.clear();
   router.push("/login");
+};
+
+// 主题切换
+const handleThemeChange = (themeId) => {
+  themeStore.setTheme(themeId);
 };
 
 // 菜单路由

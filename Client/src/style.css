@@ -1,9 +1,37 @@
-/* 👇 你的全局自定义样式写在下面 */
+/* 👇 主题 CSS 变量 */
 :root {
   --vue-green: #42b883;
   --vue-light: #35e095;
   --vue-dark: #35495e;
   --vue-blue: #3b82f6;
+}
+
+/* 浅蓝主题（默认） */
+[data-theme="blue"] {
+  --primary-color: #89C2FF;
+  --primary-color-light: rgba(137, 194, 255, 0.12);
+  --bg-color: #E6F7FF;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(137, 194, 255, 0.25);
+  --text-primary: #2c3e50;
+  --text-secondary: #606266;
+  --gradient-start: #89C2FF;
+  --gradient-end: #67C23A;
+  --hero-gradient: linear-gradient(135deg, #89C2FF 0%, #5BA0E0 100%);
+}
+
+/* 浅紫主题 */
+[data-theme="purple"] {
+  --primary-color: #B19CD9;
+  --primary-color-light: rgba(177, 156, 217, 0.12);
+  --bg-color: #D3D3D3;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(177, 156, 217, 0.25);
+  --text-primary: #2c3e50;
+  --text-secondary: #606266;
+  --gradient-start: #B19CD9;
+  --gradient-end: #9B7EC4;
+  --hero-gradient: linear-gradient(135deg, #B19CD9 0%, #8B6CB8 100%);
 }
 
 * {
@@ -17,8 +45,9 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
-  background: #fff;
-  color: var(--vue-dark);
+  background: var(--bg-color, #fff);
+  color: var(--text-primary, #35495e);
+  transition: background 0.3s ease;
 }
 
 #app {

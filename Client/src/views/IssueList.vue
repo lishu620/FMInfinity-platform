@@ -179,10 +179,10 @@ onMounted(() => {
 .issue-card {
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--card-bg, rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
 }
 
 .card-header {

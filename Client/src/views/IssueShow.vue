@@ -263,15 +263,15 @@ onMounted(() => {
 }
 
 .issue-card {
-  background: #f8f9fa;
+  background: var(--card-bg, #f8f9fa);
   border-radius: 12px;
   padding: 20px;
   cursor: pointer;
-  border: 1px solid #eee;
+  border: 1px solid var(--card-border, #eee);
 }
 
 .issue-card:hover {
-  background: #e6f7ff;
+  background: var(--primary-color-light, #e6f7ff);
 }
 
 .title {
@@ -301,7 +301,7 @@ onMounted(() => {
 }
 
 .song-card {
-  background: #fff;
+  background: var(--card-bg, #fff);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;

@@ -80,7 +80,7 @@ const scrollToFeatures = () => {
 .hero {
   text-align: center;
   padding: 80px 20px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--card-bg, rgba(255, 255, 255, 0.6));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
@@ -92,13 +92,13 @@ const scrollToFeatures = () => {
   margin-bottom: 20px;
 }
 .gradient-text {
-  background: linear-gradient(90deg, #409eff, #67c23a);
+  background: linear-gradient(90deg, var(--gradient-start, #409eff), var(--gradient-end, #67c23a));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .hero-desc {
   font-size: 18px;
-  color: #606266;
+  color: var(--text-secondary, #606266);
   max-width: 800px;
   margin: 0 auto 40px;
 }
@@ -118,10 +118,10 @@ const scrollToFeatures = () => {
 .feature-card {
   padding: 30px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--card-bg, rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
   text-align: center;
 }
@@ -134,7 +134,7 @@ const scrollToFeatures = () => {
   margin-bottom: 10px;
 }
 .feature-desc {
-  color: #606266;
+  color: var(--text-secondary, #606266);
   line-height: 1.6;
 }
 </style>

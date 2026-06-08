@@ -108,7 +108,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 24px;
-  background: #fff;
+  background: var(--card-bg, #fff);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);

@@ -1,0 +1,16 @@
+{
+  "themes": [
+    {
+      "id": "blue",
+      "name": "浅蓝主题",
+      "primary": "#89C2FF",
+      "background": "#E6F7FF"
+    },
+    {
+      "id": "purple",
+      "name": "浅紫主题",
+      "primary": "#B19CD9",
+      "background": "#D3D3D3"
+    }
+  ]
+}

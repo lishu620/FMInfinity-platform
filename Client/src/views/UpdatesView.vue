@@ -126,7 +126,7 @@ h1 {
 }
 
 .update-card {
-  background: white;
+  background: var(--card-bg, white);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
@@ -142,7 +142,7 @@ h1 {
 }
 
 .update-header {
-  background: linear-gradient(135deg, #42b983 0%, #2c3e50 100%);
+  background: linear-gradient(135deg, var(--gradient-start, #42b983) 0%, #2c3e50 100%);
   color: white;
   padding: 1rem 1.5rem;
   display: flex;
@@ -165,7 +165,7 @@ h1 {
 }
 
 .version-badge {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--primary-color-light, rgba(255, 255, 255, 0.2));
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -175,7 +175,7 @@ h1 {
 .update-content {
   padding: 1.5rem;
   line-height: 1.6;
-  color: #34495e;
+  color: var(--text-primary, #34495e);
 }
 
 .update-content :deep(h1),
