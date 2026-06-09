@@ -24,6 +24,7 @@ app.use("/api", require("./routes/issue"));
 app.use("/api", require("./routes/vote"));
 app.use("/api", require("./routes/vsingers"));
 app.use("/api/notice", require("./routes/notice"));
+app.use("/api", require("./routes/dailyQuote"));
 
 // SPA fallback
 app.use((req, res, next) => {

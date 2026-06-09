@@ -155,6 +155,17 @@ Vsinger.belongsToMany(PublicSong, {
 Notice.belongsTo(User, { foreignKey: "receiveUserId", as: "receiveUser" });
 Notice.belongsTo(User, { foreignKey: "sendUserId", as: "sendUser" });
 
+// 8. 每日一言表
+const DailyQuote = sequelize.define("DailyQuote", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  content: { type: DataTypes.TEXT, allowNull: false },
+  link: { type: DataTypes.STRING },
+  isUsed: { type: DataTypes.BOOLEAN, defaultValue: false },
+  userId: { type: DataTypes.INTEGER, allowNull: false },
+});
+
+DailyQuote.belongsTo(User, { foreignKey: "userId", as: "submitter" });
+
 // 初始化数据库
 const initDB = async () => {
   await sequelize.sync({ force: false });
@@ -171,7 +182,9 @@ const initDB = async () => {
 
   const bcrypt = require("bcryptjs");
   const hashedPwd = await bcrypt.hash("admin@123", 10);
-  await User.findOrCreate({
+
+  // 初始化默认每日一言
+  const [adminUser] = await User.findOrCreate({
     where: { username: "admin" },
     defaults: {
       nickname: "超级管理员",
@@ -179,6 +192,16 @@ const initDB = async () => {
       statusId: adminGroup.id,
       isGroupAdmin: true,
       isApproved: true,
+    },
+  });
+
+  await DailyQuote.findOrCreate({
+    where: { content: "我的登场即是天意 不必向谁证明唯一" },
+    defaults: {
+      content: "我的登场即是天意 不必向谁证明唯一",
+      link: "",
+      isUsed: false,
+      userId: adminUser.id,
     },
   });
 
@@ -198,4 +221,5 @@ module.exports = {
   Copy,
   Vsinger,
   Notice,
+  DailyQuote,
 };

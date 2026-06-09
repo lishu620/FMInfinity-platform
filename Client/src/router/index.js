@@ -13,6 +13,7 @@ import SubmissionStatus from "../views/SubmissionStatus.vue";
 import VsingersManager from "../views/VsingersManager.vue";
 import VsingerShow from "../views/VsingerShow.vue";
 import UpdatesView from "../views/UpdatesView.vue";
+import DailyQuote from "../views/DailyQuote.vue";
 import UserStatus from "../views/UserStatus.vue";
 import { pa } from "element-plus/es/locale/index.mjs";
 
@@ -75,6 +76,11 @@ const routes = [
   {
     path: "/update",
     component: UpdatesView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/daily-quote",
+    component: DailyQuote,
     meta: { requiresAuth: true },
   },
   {

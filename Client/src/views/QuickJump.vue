@@ -11,6 +11,11 @@
           <p class="banner-subtitle">
             欢迎来到 FMInfinity 共鸣电台聚合一站式服务平台，快速导航到您需要的功能模块
           </p>
+          <p class="banner-quote" v-if="dailyQuote.content" @click="openQuoteLink">
+            <span class="quote-icon">💬</span>
+            <span class="quote-text">「{{ dailyQuote.content }}」</span>
+            <span v-if="dailyQuote.link" class="quote-link-hint">🔗 点击查看来源</span>
+          </p>
         </div>
         <div class="banner-stats">
           <div class="stat-item">
@@ -101,6 +106,17 @@
           <div class="card-body">
             <h3>更新日志</h3>
             <p>查看平台版本更新记录与新功能说明</p>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+
+        <div class="feature-card card-daily-quote" @click="GoPage('/daily-quote')">
+          <div class="card-icon-wrapper">
+            <el-icon :size="32"><ChatLineSquare /></el-icon>
+          </div>
+          <div class="card-body">
+            <h3>每日一言</h3>
+            <p>提交与浏览每日经典语句，为平台增添温度</p>
           </div>
           <div class="card-arrow">→</div>
         </div>
@@ -240,17 +256,43 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
 import {
   Histogram, Calendar, Platform, TrendCharts, DocumentChecked, Reading,
   Microphone, UserFilled, Notebook, Edit, Management, EditPen,
-  Setting, Avatar, Share, Headset, HomeFilled, User, House, InfoFilled
+  Setting, Avatar, Share, Headset, HomeFilled, User, House, InfoFilled,
+  ChatLineSquare
 } from "@element-plus/icons-vue";
+import api from "@/store/auth";
 
 const router = useRouter();
 const authStore = useAuthStore();
+
+// 每日一言
+const dailyQuote = ref({
+  content: "我的登场即是天意 不必向谁证明唯一",
+  link: "",
+});
+
+const fetchRandomQuote = async () => {
+  try {
+    const res = await api.get("/daily-quote/random");
+    if (res.data && res.data.content) {
+      dailyQuote.value = res.data;
+    }
+  } catch (err) {
+    // 静默失败，使用默认值
+    console.error("获取每日一言失败:", err);
+  }
+};
+
+const openQuoteLink = () => {
+  if (dailyQuote.value.link) {
+    window.open(`https://www.bilibili.com/opus/${dailyQuote.value.link}`, "_blank");
+  }
+};
 
 // 角色判断
 const isAdmin = computed(() => authStore.user?.group === 'admin');
@@ -281,6 +323,10 @@ const currentDate = computed(() => {
 const GoPage = (path) => {
   router.push(path);
 };
+
+onMounted(() => {
+  fetchRandomQuote();
+});
 </script>
 
 <style scoped>
@@ -327,6 +373,40 @@ const GoPage = (path) => {
   margin: 0;
   max-width: 480px;
   line-height: 1.6;
+}
+.banner-quote {
+  margin: 12px 0 0 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  cursor: default;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+}
+.banner-quote .quote-icon {
+  flex-shrink: 0;
+}
+.banner-quote .quote-text {
+  flex: 1;
+}
+.banner-quote .quote-link-hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+  font-style: normal;
+}
+.banner-quote .quote-link-hint:hover {
+  color: #fff;
 }
 .banner-stats {
   display: flex;
@@ -518,6 +598,9 @@ const GoPage = (path) => {
 
 .card-update .card-icon-wrapper { background: linear-gradient(135deg, #9b59b6, #7d3c98); }
 .card-update:hover::before { background: #9b59b6; }
+
+.card-daily-quote .card-icon-wrapper { background: linear-gradient(135deg, #00bcd4, #0097a7); }
+.card-daily-quote:hover::before { background: #00bcd4; }
 
 .card-issue .card-icon-wrapper { background: linear-gradient(135deg, #e74c3c, #c0392b); }
 .card-issue:hover::before { background: #e74c3c; }
