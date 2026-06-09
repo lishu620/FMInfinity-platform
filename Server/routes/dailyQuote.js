@@ -52,10 +52,10 @@ router.get("/daily-quote", authMiddleware, async (req, res) => {
   }
 });
 
-// 提交每日一言
+// 提交每日一言（所有用户，只需填内容）
 router.post("/daily-quote", authMiddleware, async (req, res) => {
   try {
-    const { content, link } = req.body;
+    const { content } = req.body;
 
     if (!content || !content.trim()) {
       return res.status(400).json({ message: "内容不能为空" });
@@ -63,7 +63,7 @@ router.post("/daily-quote", authMiddleware, async (req, res) => {
 
     const quote = await DailyQuote.create({
       content: content.trim(),
-      link: link || "",
+      link: "",
       userId: req.user.id,
     });
 
@@ -78,18 +78,30 @@ router.post("/daily-quote", authMiddleware, async (req, res) => {
   }
 });
 
-// 标记为已使用
+// 超级管理员选用每日一言（填写链接并标记已使用）
 router.put("/daily-quote/:id/use", authMiddleware, isSuperAdmin, async (req, res) => {
   try {
     const quote = await DailyQuote.findByPk(req.params.id);
     if (!quote) {
       return res.status(404).json({ message: "每日一言不存在" });
     }
+
+    const { link } = req.body;
+    // 从完整URL中提取opus ID
+    if (link) {
+      const match = link.trim().match(/opus\/(\d+)/);
+      quote.link = match ? match[1] : link.trim();
+    }
     quote.isUsed = true;
     await quote.save();
-    res.json(quote);
+
+    const fullQuote = await DailyQuote.findByPk(quote.id, {
+      include: [{ model: User, as: "submitter", attributes: ["id", "nickname"] }],
+    });
+
+    res.json(fullQuote);
   } catch (err) {
-    console.error("标记每日一言失败:", err);
+    console.error("选用每日一言失败:", err);
     res.status(500).json({ message: "操作失败" });
   }
 });
