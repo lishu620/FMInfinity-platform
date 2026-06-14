@@ -15,6 +15,10 @@ import VsingerShow from "../views/VsingerShow.vue";
 import UpdatesView from "../views/UpdatesView.vue";
 import DailyQuote from "../views/DailyQuote.vue";
 import UserStatus from "../views/UserStatus.vue";
+
+// 管理界面
+import SystemConsole from "../views/console/SystemConsole.vue";
+
 import { pa } from "element-plus/es/locale/index.mjs";
 
 const routes = [
@@ -87,6 +91,12 @@ const routes = [
     path: "/user-status",
     component: UserStatus,
     meta: { requiresAuth: false },
+  },
+  {
+    path: "/system-console",
+    name: "SystemConsole",
+    component: SystemConsole,
+    meta: { requiresAuth: true, requiresRole: ["admin"] },
   },
 ];
 

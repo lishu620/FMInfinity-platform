@@ -38,6 +38,9 @@
         >组管理</el-menu-item
       >
       <el-menu-item index="3-3">歌姬管理</el-menu-item>
+      <el-menu-item index="3-4" v-if="authStore.user?.isSuperAdmin"
+        >系统设置</el-menu-item
+      >
     </el-sub-menu>
 
     <div class="right-menu">
@@ -238,6 +241,9 @@ const handleSelect = (key) => {
     case "3-3":
       router.push("/vsinger-console");
       break;
+    case "3-4":
+      router.push("/system-console");
+      break;
     case "10":
       router.push("/login");
       break;
@@ -254,6 +260,7 @@ onMounted(() => {
   if (path === "/issues") activeIndex.value = "2";
   if (path === "/vote") activeIndex.value = "4";
   if (path === "/admin-console") activeIndex.value = "3-1";
+  if (path === "/system-console") activeIndex.value = "3-4";
   if (path === "/profile") activeIndex.value = "11";
 });
 
