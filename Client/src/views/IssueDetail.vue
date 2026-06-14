@@ -9,19 +9,31 @@
 
           <h1 class="page-title-detailed">{{ issue.title }}</h1>
 
-          <el-select
-            v-model="issue.selectedCount"
-            :disabled="!isAdminOrIssueAdmin"
-            style="width: 120px"
-            @change="updateSelectedCount"
-          >
-            <el-option
-              v-for="n in 10"
-              :key="n"
-              :label="`本期选择${n}首`"
-              :value="n"
+          <div class="select-count-wrapper">
+            <span class="select-count-label">本期选择</span>
+            <span class="select-count-bracket">[</span>
+            <button
+              class="count-btn count-btn-minus"
+              :disabled="!isAdminOrIssueAdmin || issue.selectedCount <= 1"
+              @click="decreaseCount"
+            >&minus;</button>
+            <input
+              v-model.number="issue.selectedCount"
+              type="number"
+              class="count-input"
+              :disabled="!isAdminOrIssueAdmin"
+              :min="1"
+              :max="100"
+              @change="updateSelectedCount"
             />
-          </el-select>
+            <button
+              class="count-btn count-btn-plus"
+              :disabled="!isAdminOrIssueAdmin"
+              @click="increaseCount"
+            >+</button>
+            <span class="select-count-bracket">]</span>
+            <span class="select-count-label">首歌</span>
+          </div>
 
           <el-button
             v-if="isAdminOrIssueAdmin"
@@ -411,6 +423,21 @@ onMounted(async () => {
   await fetchAdmins();
 });
 
+const decreaseCount = () => {
+  if (issue.value.selectedCount > 1) {
+    issue.value.selectedCount--;
+    updateSelectedCount();
+  }
+};
+
+const increaseCount = () => {
+  const newVal = (issue.value.selectedCount || 0) + 1;
+  if (newVal <= 100) {
+    issue.value.selectedCount = newVal;
+    updateSelectedCount();
+  }
+};
+
 const updateSelectedCount = async () => {
   try {
     await api.put(`/issue/${issueId}/selected-count`, {
@@ -489,5 +516,85 @@ const finalizeSongs = async () => {
 }
 .mt-8 {
   margin-top: 32px;
+}
+
+/* 本期选择数量组件 */
+.select-count-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.select-count-label {
+  font-size: 14px;
+  color: #606266;
+}
+
+.select-count-bracket {
+  font-size: 16px;
+  font-weight: bold;
+  color: #909399;
+  user-select: none;
+}
+
+.count-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  background: #f5f7fa;
+  color: #606266;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.count-btn:hover:not(:disabled) {
+  background: #ecf5ff;
+  border-color: #409eff;
+  color: #409eff;
+}
+
+.count-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.count-input {
+  width: 56px;
+  height: 28px;
+  text-align: center;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #303133;
+  outline: none;
+  padding: 0 4px;
+  -moz-appearance: textfield;
+}
+
+.count-input::-webkit-inner-spin-button,
+.count-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.count-input:disabled {
+  background: #f5f7fa;
+  color: #c0c4cc;
+  cursor: not-allowed;
+}
+
+.count-input:focus {
+  border-color: #409eff;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
 </style>

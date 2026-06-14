@@ -71,7 +71,7 @@ const Issue = sequelize.define("Issue", {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 3,
-    validate: { min: 1, max: 10 },
+    validate: { min: 1, max: 100 },
   },
   isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
 });

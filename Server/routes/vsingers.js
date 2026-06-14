@@ -13,23 +13,24 @@ router.get("/vsingers", authMiddleware, async (req, res) => {
       sequelize,
     } = require("../models");
 
-    const list = await Vsinger.findAll({
-      order: [["id", "ASC"]],
-      include: [
-        {
-          model: PublicSong,
-          as: "publicSongs",
-          attributes: [],
-          required: false,
-        },
-      ],
-      attributes: {
-        include: [
-          [sequelize.fn("COUNT", sequelize.col("publicSongs.id")), "songCount"],
-        ],
-      },
-      group: ["Vsinger.id"],
-    });
+ const list = await Vsinger.findAll({
+  order: [["id", "ASC"]],
+  include: [
+    {
+      model: PublicSong,
+      as: "publicSongs",
+      attributes: [],           // 不选取 PublicSong 的列（只需计数）
+      through: { attributes: [] }, // ⭐ 关键：不选取中间表 SongVsinger 的列
+      required: false,
+    },
+  ],
+  attributes: {
+    include: [
+      [sequelize.fn("COUNT", sequelize.col("publicSongs.id")), "songCount"],
+    ],
+  },
+  group: ["Vsinger.id"],
+});
 
     res.json(list);
   } catch (err) {

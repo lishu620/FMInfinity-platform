@@ -13,7 +13,7 @@
         <div class="title">{{ issue.title }}</div>
         <div class="status status-ing">{{ statusText(issue.status) }}</div>
         <div class="desc">
-          本期选择 {{ issue.selectedCount || 0 }} 首 → 点击查看文案
+          本期选择<span class="count-highlight">{{ issue.selectedCount || 0 }}</span>首歌 → 点击查看文案
         </div>
       </div>
       <div class="empty" v-if="issues.length === 0">暂无可查看稿件</div>
@@ -291,6 +291,12 @@ onMounted(() => {
 .desc {
   color: #999;
   font-size: 13px;
+}
+
+.count-highlight {
+  color: #409eff;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .empty {

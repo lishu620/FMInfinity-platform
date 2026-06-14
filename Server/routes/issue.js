@@ -420,8 +420,8 @@ router.put(
     try {
       const { count } = req.body;
 
-      if (!Number.isInteger(count) || count < 1 || count > 10) {
-        return res.status(400).json({ message: "选择数量必须是 1-10 的整数" });
+      if (!Number.isInteger(count) || count < 1 || count > 100) {
+        return res.status(400).json({ message: "选择数量必须是 1-100 的整数" });
       }
 
       const issue = await Issue.findByPk(req.params.id);
