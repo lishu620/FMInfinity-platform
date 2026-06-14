@@ -513,4 +513,30 @@ router.get("/users/public-status", async (req, res) => {
   }
 });
 
+// 数据库连接状态查询（仅超管）
+router.get("/db-status", authMiddleware, isSuperAdmin, async (req, res) => {
+  try {
+    const { sequelize } = require("../models");
+    await sequelize.authenticate();
+    const dbConfig = sequelize.config;
+    res.json({
+      connected: true,
+      dialect: dbConfig.dialect,
+      database: dbConfig.database || dbConfig.storage || "N/A",
+      host: dbConfig.host || "localhost (SQLite)",
+      port: dbConfig.port || "N/A",
+    });
+  } catch (err) {
+    console.error("数据库连接检查失败:", err);
+    res.json({
+      connected: false,
+      error: err.message,
+      dialect: process.env.DB_DIALECT || "sqlite",
+      database: process.env.DB_NAME || process.env.DB_STORAGE || "N/A",
+      host: process.env.DB_HOST || "localhost (SQLite)",
+      port: parseInt(process.env.DB_PORT, 10) || 3306,
+    });
+  }
+});
+
 module.exports = router;

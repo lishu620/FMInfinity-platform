@@ -1,12 +1,31 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const path = require("path");
 
-// 连接SQLite数据库
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: path.join(__dirname, "../main.sqlite"),
-  logging: false,
-});
+const DB_DIALECT = process.env.DB_DIALECT || "sqlite";
+
+// 根据 DB_DIALECT 构建 Sequelize 配置
+let sequelize;
+
+if (DB_DIALECT === "mysql") {
+  sequelize = new Sequelize({
+    dialect: "mysql",
+    host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT, 10) || 3306,
+    database: process.env.DB_NAME || "fminfinity",
+    username: process.env.DB_USER || "fminfinity",
+    password: process.env.DB_PASSWORD || "",
+    logging: false,
+  });
+} else {
+  // 默认 SQLite
+  sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: process.env.DB_STORAGE || path.join(__dirname, "../main.sqlite"),
+    logging: false,
+  });
+}
+
+console.log(`数据库类型: ${DB_DIALECT}`);
 
 // 1. 用户组表 (status)
 const Status = sequelize.define("Status", {
