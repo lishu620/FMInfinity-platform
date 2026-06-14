@@ -490,7 +490,7 @@ router.get("/users/public-status", async (req, res) => {
       ],
       include: { model: Status, attributes: ["name"] },
       where: { isApproved: true, isBanned: false },
-      order: [["lastSeenAt", "DESC NULLS LAST"]],
+      order: [["lastSeenAt", "DESC"]],
     });
 
     const ONLINE_THRESHOLD = 5 * 60 * 1000; // 5分钟内视为在线

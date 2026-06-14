@@ -59,6 +59,7 @@
         :key="song.id"
       >
         <div class="card-body">
+          <!-- 左：信息栏 -->
           <div class="info-side">
             <div class="votes-badge">总票数：{{ song.totalVotes || 0 }}</div>
 
@@ -105,11 +106,23 @@
             </div>
           </div>
 
-          <div class="editor-side">
+          <!-- 中：文案编写 -->
+          <div class="editor-side" :class="{ expanded: expandedMap[song.id] }">
+            <div class="editor-header">
+              <span class="editor-label">推荐文案</span>
+              <el-button
+                size="small"
+                :icon="expandedMap[song.id] ? 'Fold' : 'FullScreen'"
+                @click="toggleExpand(song.id)"
+              >
+                {{ expandedMap[song.id] ? '收起' : '放大编辑' }}
+              </el-button>
+            </div>
+
             <el-input
               v-model="draftMap[song.id]"
               type="textarea"
-              :rows="10"
+              :rows="expandedMap[song.id] ? 20 : 10"
               placeholder="请输入推荐文案"
               :disabled="!canEdit(song)"
             />
@@ -119,6 +132,32 @@
               <el-button type="success" @click="saveCopy(song, true)">
                 提交文案
               </el-button>
+            </div>
+          </div>
+
+          <!-- 右：视频/音频 -->
+          <div class="player-side">
+            <div class="player-container" v-if="song.link && song.type === 'bilibili'">
+              <iframe
+                :src="getEmbedUrl(song.link, song.type)"
+                width="100%"
+                height="320"
+                frameborder="0"
+                allowfullscreen
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+              ></iframe>
+            </div>
+            <div class="player-container" v-else-if="song.link && song.type === 'netease'">
+              <iframe
+                :src="getEmbedUrl(song.link, song.type)"
+                width="100%"
+                height="120"
+                frameborder="0"
+                sandbox="allow-same-origin allow-scripts allow-forms"
+              ></iframe>
+            </div>
+            <div class="no-player" v-else>
+              暂无播放链接<br />文案组可先在歌曲信息中补充
             </div>
           </div>
         </div>
@@ -170,6 +209,7 @@ const currentIssue = ref({});
 const currentSongs = ref([]);
 const allSongs = ref([]);
 const draftMap = ref({});
+const expandedMap = ref({});
 
 const selectedSongIdForReview = ref(null);
 
@@ -190,6 +230,15 @@ const statusText = (status) => {
     published: "已发布",
   };
   return map[status] || status || "-";
+};
+
+const getEmbedUrl = (link, type) => {
+  if (!link) return "";
+  if (type === "bilibili")
+    return `//player.bilibili.com/player.html?isOutside=true&bvid=${link}&p=1&autoplay=0`;
+  if (type === "netease")
+    return `//music.163.com/outchain/player?type=2&id=${link}&auto=0&height=80`;
+  return "";
 };
 
 const updateSelectedCount = async () => {
@@ -257,6 +306,10 @@ const canEdit = (song) => {
   return song.copy.userId === authStore.user?.id;
 };
 
+const toggleExpand = (songId) => {
+  expandedMap.value[songId] = !expandedMap.value[songId];
+};
+
 const loadReviewIssues = async () => {
   try {
     const res = await api.get("/issue/review-list");
@@ -299,7 +352,7 @@ const openReviewModal = async (issue) => {
   selectedSongIdForReview.value = null;
 
   try {
-    (fetchAllSongs(issue.id), fetchReview(issue.id));
+    await Promise.all([fetchAllSongs(issue.id), fetchReview(issue.id)]);
   } catch (e) {
     console.error(e);
     ElMessage.error("加载稿件数据失败");
@@ -493,11 +546,36 @@ onMounted(() => {
 }
 
 .info-side {
-  width: 360px;
+  width: 280px;
+  flex-shrink: 0;
 }
 
 .editor-side {
   flex: 1;
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.editor-side.expanded {
+  flex: 2;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.editor-label {
+  font-weight: 600;
+  color: #303133;
+  font-size: 15px;
+}
+
+.player-side {
+  width: 360px;
+  flex-shrink: 0;
 }
 
 .votes-badge {
@@ -533,5 +611,25 @@ onMounted(() => {
   margin-top: 12px;
   display: flex;
   gap: 12px;
+}
+
+.player-container {
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.no-player {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  color: #909399;
+  font-size: 14px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

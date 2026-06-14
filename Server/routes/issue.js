@@ -474,19 +474,23 @@ router.get("/issue/:id/review", authMiddleware, async (req, res) => {
       copyMap[c.songId] = c;
     }
 
-    const result = songs.map((song) => ({
-      ...song.toJSON(),
-      totalVotes: voteMap[song.id] || 0,
-      copy: copyMap[song.id]
-        ? {
-            id: copyMap[song.id].id,
-            content: copyMap[song.id].content,
-            isSubmitted: copyMap[song.id].isSubmitted,
-            userId: copyMap[song.id].userId,
-            nickname: copyMap[song.id].User?.nickname || "",
-          }
-        : null,
-    }));
+    const result = songs.map((song) => {
+      const json = song.toJSON();
+      return {
+        ...json,
+        vsingers: json.vsingers || (song.vsingers ? song.vsingers.map(v => v.toJSON()) : []),
+        totalVotes: voteMap[song.id] || 0,
+        copy: copyMap[song.id]
+          ? {
+              id: copyMap[song.id].id,
+              content: copyMap[song.id].content,
+              isSubmitted: copyMap[song.id].isSubmitted,
+              userId: copyMap[song.id].userId,
+              nickname: copyMap[song.id].User?.nickname || "",
+            }
+          : null,
+      };
+    });
 
     res.json({
       issue,
@@ -596,16 +600,20 @@ router.get("/issue/:id/show", authMiddleware, async (req, res) => {
     });
 
     // 5. 组装最终数据
-    const result = songs.map((song) => ({
-      ...song.toJSON(),
-      totalVotes: voteMap[song.id] || 0,
-      copy: copyMap[song.id]
-        ? {
-            ...copyMap[song.id].toJSON(),
-            nickname: copyMap[song.id].User?.nickname || "未知",
-          }
-        : null,
-    }));
+    const result = songs.map((song) => {
+      const json = song.toJSON();
+      return {
+        ...json,
+        vsingers: json.vsingers || (song.vsingers ? song.vsingers.map(v => v.toJSON()) : []),
+        totalVotes: voteMap[song.id] || 0,
+        copy: copyMap[song.id]
+          ? {
+              ...copyMap[song.id].toJSON(),
+              nickname: copyMap[song.id].User?.nickname || "未知",
+            }
+          : null,
+      };
+    });
 
     return res.json({ songs: result });
   } catch (err) {
