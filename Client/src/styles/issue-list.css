@@ -7,3 +7,57 @@
   flex-direction: column;
   gap: 16px;
 }
+
+/* 稿件管理页头部 */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 767px) {
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .issue-card-list {
+    gap: 10px;
+  }
+}
+
+/* 卡片标题 */
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .card-title {
+    font-size: 18px;
+  }
+}
+
+/* 卡片状态行 */
+.card-status {
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+}
+
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 767px) {
+  .button-group {
+    flex-wrap: wrap;
+  }
+  .button-group .el-button {
+    flex: 1;
+    min-width: 0;
+  }
+}

@@ -122,8 +122,15 @@ const updateProfile = async () => {
 <style scoped>
 .profile-container {
   max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: 16px auto;
+  padding: 0 12px;
+}
+
+@media (min-width: 768px) {
+  .profile-container {
+    margin: 40px auto;
+    padding: 0 20px;
+  }
 }
 
 .profile-box {
@@ -131,19 +138,64 @@ const updateProfile = async () => {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
-  padding: 40px;
+  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@media (min-width: 768px) {
+  .profile-box {
+    padding: 40px;
+  }
 }
 
 .profile-title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   color: var(--text-primary, #333);
 }
 
+@media (min-width: 768px) {
+  .profile-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+}
+
 .text-lg {
-  font-size: 18px;
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  .text-lg {
+    font-size: 18px;
+  }
+}
+
+/* 表单响应式 */
+@media (max-width: 767px) {
+  .el-form-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .el-form-item .el-form-item__label {
+    width: auto !important;
+    margin-bottom: 4px;
+  }
+  .el-form-item .el-input {
+    width: 100% !important;
+  }
+}
+
+.mt-8 {
+  margin-top: 24px;
+}
+
+@media (min-width: 768px) {
+  .mt-8 {
+    margin-top: 32px;
+  }
 }
 </style>

@@ -183,13 +183,22 @@ onMounted(() => {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
+  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
+
+.issue-card:nth-child(1) { animation-delay: 0.05s; }
+.issue-card:nth-child(2) { animation-delay: 0.1s; }
+.issue-card:nth-child(3) { animation-delay: 0.15s; }
+.issue-card:nth-child(4) { animation-delay: 0.2s; }
+.issue-card:nth-child(5) { animation-delay: 0.25s; }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* 按钮并排、间距统一 */
@@ -221,5 +230,27 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+}
+
+@media (max-width: 767px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .card-title {
+    font-size: 17px;
+  }
+  .button-group {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .button-group .el-button {
+    flex: 1;
+  }
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 </style>

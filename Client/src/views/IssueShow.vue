@@ -370,4 +370,28 @@ onMounted(() => {
   padding: 40px;
   color: #999;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 767px) {
+  .song-card {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .info-side {
+    min-width: 0;
+    width: 100%;
+  }
+  .player-side {
+    max-width: 100%;
+  }
+  .player-container iframe {
+    height: 220px;
+  }
+  .song-name {
+    font-size: 17px;
+  }
+  .no-player {
+    padding: 30px;
+  }
+}
 </style>

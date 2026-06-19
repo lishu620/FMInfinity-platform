@@ -632,4 +632,42 @@ onMounted(() => {
   justify-content: center;
   flex-direction: column;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 1023px) {
+  .card-body {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .info-side {
+    width: 100%;
+  }
+  .editor-side {
+    min-width: 0;
+    width: 100%;
+  }
+  .player-side {
+    width: 100%;
+  }
+  .player-container iframe {
+    height: 240px;
+  }
+}
+
+@media (max-width: 767px) {
+  .song-review-card {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .song-name {
+    font-size: 17px;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .no-player {
+    padding: 24px 12px;
+  }
+}
 </style>

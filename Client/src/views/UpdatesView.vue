@@ -224,4 +224,24 @@ h1 {
   border-radius: 8px;
   overflow-x: auto;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 767px) {
+  .updates-container {
+    padding: 1rem 0.5rem;
+  }
+  h1 {
+    font-size: 1.6rem;
+  }
+  .update-header {
+    padding: 0.8rem 1rem;
+  }
+  .update-header h2 {
+    font-size: 1.1rem;
+  }
+  .update-content {
+    padding: 1rem;
+    font-size: 14px;
+  }
+}
 </style>

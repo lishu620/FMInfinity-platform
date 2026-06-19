@@ -4,6 +4,12 @@
   --vue-light: #35e095;
   --vue-dark: #35495e;
   --vue-blue: #3b82f6;
+
+  /* 响应式断点 */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
 }
 
 /* 浅蓝主题（默认） */
@@ -40,6 +46,12 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family:
     system-ui,
@@ -48,9 +60,77 @@ body {
   background: var(--bg-color, #fff);
   color: var(--text-primary, #35495e);
   transition: background 0.3s ease;
+  overflow-x: hidden;
 }
 
 #app {
   width: 100%;
   min-height: 100vh;
+}
+
+/* ========== 全局响应式工具 ========== */
+
+/* 移动端优先的容器 */
+.container-responsive {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding: 20px;
+  }
+}
+
+/* 触摸友好的最小点击区域 */
+@media (max-width: 767px) {
+  .el-button,
+  .el-menu-item,
+  a,
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* 移动端隐藏/显示 */
+.mobile-only {
+  display: none;
+}
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block;
+  }
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* 平板适配 */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablet-full {
+    width: 100% !important;
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
 }

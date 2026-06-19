@@ -7,6 +7,7 @@ import router from "./router";
 
 // 导入全局样式
 import "./style.css";
+import "./styles/animations.css";
 import "./styles/public.css";
 import "./styles/issue-list.css";
 

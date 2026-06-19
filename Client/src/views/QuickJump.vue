@@ -334,16 +334,30 @@ onMounted(() => {
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  padding: 16px 12px 40px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-container {
+    padding: 24px 20px 60px;
+  }
 }
 
 /* ========== 欢迎横幅 ========== */
 .welcome-banner {
   background: var(--hero-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
   border-radius: 16px;
-  padding: 32px 36px;
-  margin-bottom: 32px;
+  padding: 20px 16px;
+  margin-bottom: 20px;
   box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (min-width: 768px) {
+  .welcome-banner {
+    padding: 32px 36px;
+    margin-bottom: 32px;
+  }
 }
 .banner-content {
   display: flex;
@@ -493,8 +507,21 @@ onMounted(() => {
 /* ========== 卡片网格 ========== */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
 }
 
 /* ========== 功能卡片 ========== */
@@ -636,16 +663,20 @@ onMounted(() => {
 }
 
 /* ========== 响应式 ========== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .dashboard-container {
-    padding: 16px 12px 40px;
+    padding: 12px 8px 32px;
   }
   .welcome-banner {
-    padding: 20px 16px;
+    padding: 16px 14px;
     border-radius: 12px;
+    margin-bottom: 16px;
   }
   .banner-title {
-    font-size: 22px;
+    font-size: 20px;
+  }
+  .banner-subtitle {
+    font-size: 13px;
   }
   .banner-content {
     flex-direction: column;
@@ -654,14 +685,29 @@ onMounted(() => {
   .banner-stats {
     width: 100%;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+  }
+  .stat-item {
+    padding: 10px 14px;
   }
   .card-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
   .feature-card {
-    padding: 16px 16px 16px 12px;
+    padding: 14px 14px 14px 12px;
+  }
+  .section-title {
+    font-size: 17px;
+  }
+  .card-body h3 {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

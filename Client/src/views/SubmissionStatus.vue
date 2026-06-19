@@ -149,4 +149,25 @@ onMounted(() => {
   padding: 60px;
   color: #999;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 767px) {
+  .issue-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px;
+  }
+  .issue-info {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .steps-container {
+    min-width: 0;
+    width: 100%;
+  }
+  .empty {
+    padding: 40px 20px;
+  }
+}
 </style>

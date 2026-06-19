@@ -1,15 +1,30 @@
 /* 页面容器 */
 .page-container {
   max-width: 100%;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: 20px auto;
+  padding: 0 12px;
 }
+
+@media (min-width: 768px) {
+  .page-container {
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+}
+
 /* 页面容器标题 */
 .page-title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   color: var(--text-primary, #333);
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
 }
 
 .acrylic {
@@ -42,7 +57,124 @@
   filter: blur(0.6px); /* 轻微模糊，弱化存在感 */
 }
 
+/* 移动端看板娘缩小 */
+@media (max-width: 767px) {
+  .mascot-img {
+    height: 50vh;
+    opacity: 0.12;
+  }
+}
+
 .tip {
   color: var(--text-secondary, #666);
   margin-bottom: 20px;
+  font-size: 14px;
 }
+
+@media (max-width: 767px) {
+  .tip {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+}
+
+/* ========== 响应式通用卡片列表 ========== */
+
+/* issue-card 通用样式（被多个页面复用） */
+.issue-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .issue-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .issue-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.issue-card {
+  background: var(--card-bg, rgba(255,255,255,0.65));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border, rgba(255,255,255,0.3));
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.issue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+.issue-card:active {
+  transform: scale(0.97);
+}
+
+.issue-card .title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--text-primary, #333);
+}
+
+@media (min-width: 768px) {
+  .issue-card .title {
+    font-size: 18px;
+  }
+}
+
+.issue-card .status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.issue-card .status-ing {
+  background: var(--primary-color-light, rgba(137,194,255,0.15));
+  color: var(--primary-color, #409EFF);
+}
+
+.issue-card .desc {
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+}
+
+.issue-card .empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+/* 响应式表格容器 */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 响应式对话框 */
+@media (max-width: 767px) {
+  .el-dialog {
+    width: 92% !important;
+    max-width: 92vw !important;
+    margin-top: 10vh !important;
+  }
+  .el-drawer {
+    width: 85% !important;
+    max-width: 85vw !important;
+  }
+}
+

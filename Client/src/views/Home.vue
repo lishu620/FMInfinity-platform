@@ -79,62 +79,167 @@ const scrollToFeatures = () => {
 <style scoped>
 .hero {
   text-align: center;
-  padding: 80px 20px;
+  padding: 40px 16px;
   background: var(--card-bg, rgba(255, 255, 255, 0.6));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
-  margin: 20px;
+  margin: 12px;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 80px 20px;
+    margin: 20px;
+  }
+}
+
 .hero-title {
-  font-size: 48px;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  line-height: 1.3;
 }
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+}
+
 .gradient-text {
   background: linear-gradient(90deg, var(--gradient-start, #409eff), var(--gradient-end, #67c23a));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: gradientShift 3s ease infinite;
 }
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
 .hero-desc {
-  font-size: 18px;
+  font-size: 15px;
   color: var(--text-secondary, #606266);
   max-width: 800px;
-  margin: 0 auto 40px;
+  margin: 0 auto 30px;
+  padding: 0 12px;
 }
+
+@media (min-width: 768px) {
+  .hero-desc {
+    font-size: 18px;
+    margin: 0 auto 40px;
+  }
+}
+
 .hero-buttons {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
+
+@media (min-width: 768px) {
+  .hero-buttons {
+    gap: 20px;
+  }
+}
+
 .features {
   max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: 24px auto;
+  padding: 0 12px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
+
+@media (min-width: 640px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 40px auto;
+  }
+}
+
 .feature-card {
-  padding: 30px;
-  border-radius: 8px;
+  padding: 24px;
+  border-radius: 12px;
   background: var(--card-bg, rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.5s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card:active {
+  transform: scale(0.97);
+}
+
+@media (min-width: 768px) {
+  .feature-card {
+    padding: 30px;
+  }
+}
+
 .feature-icon {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
 }
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+@media (min-width: 768px) {
+  .feature-icon {
+    margin-bottom: 20px;
+  }
+}
+
 .feature-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
+
+@media (min-width: 768px) {
+  .feature-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+}
+
 .feature-desc {
   color: var(--text-secondary, #606266);
   line-height: 1.6;
+  font-size: 14px;
 }
 </style>

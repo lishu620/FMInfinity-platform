@@ -465,8 +465,15 @@ const finalizeSongs = async () => {
 <style scoped>
 .issue-detail-container {
   max-width: 1400px;
-  margin: 40px auto;
-  padding: 0 20px;
+  margin: 16px auto;
+  padding: 0 12px;
+}
+
+@media (min-width: 768px) {
+  .issue-detail-container {
+    margin: 40px auto;
+    padding: 0 20px;
+  }
 }
 
 .admin-header {
@@ -474,32 +481,57 @@ const finalizeSongs = async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .issue-detail-box {
   background: var(--card-bg, #fff);
-  padding: 40px;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@media (min-width: 768px) {
+  .issue-detail-box {
+    padding: 40px;
+  }
 }
 
 .detail-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .header-left {
+    width: 100%;
+    gap: 8px;
+  }
 }
 
 .page-title-detailed {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: bold;
   margin: 0;
+}
+
+@media (min-width: 768px) {
+  .page-title-detailed {
+    font-size: 26px;
+  }
 }
 
 .status-select {
@@ -508,7 +540,18 @@ const finalizeSongs = async () => {
 
 .header-buttons {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .header-buttons {
+    width: 100%;
+  }
+  .header-buttons .el-button {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .mt-4 {
@@ -522,13 +565,26 @@ const finalizeSongs = async () => {
 .select-count-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   white-space: nowrap;
 }
 
+@media (max-width: 767px) {
+  .select-count-wrapper {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 .select-count-label {
-  font-size: 14px;
+  font-size: 13px;
   color: #606266;
+}
+
+@media (min-width: 768px) {
+  .select-count-label {
+    font-size: 14px;
+  }
 }
 
 .select-count-bracket {
@@ -567,6 +623,10 @@ const finalizeSongs = async () => {
   opacity: 0.5;
 }
 
+.count-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
 .count-input {
   width: 56px;
   height: 28px;
@@ -596,5 +656,12 @@ const finalizeSongs = async () => {
 .count-input:focus {
   border-color: #409eff;
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+/* 响应式表格 */
+@media (max-width: 767px) {
+  .el-table {
+    font-size: 12px;
+  }
 }
 </style>

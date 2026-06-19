@@ -450,4 +450,38 @@ onMounted(() => {
 .used-section {
   margin-top: 8px;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 767px) {
+  .daily-quote-container {
+    padding: 12px 8px 40px;
+  }
+  .page-title {
+    font-size: 20px;
+  }
+  .page-desc {
+    font-size: 13px;
+  }
+  .submit-card,
+  .quote-list-card,
+  .quote-cards-section {
+    padding: 16px 14px;
+    margin-bottom: 16px;
+  }
+  .quote-card-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .quote-card {
+    padding: 16px 14px 12px;
+  }
+  .quote-card-content {
+    font-size: 14px;
+  }
+  .section-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
 </style>

@@ -439,4 +439,34 @@ onMounted(() => loadVotingIssues());
   background: #f5f5f5;
   border-radius: 8px;
 }
+
+/* ========== 响应式 ========== */
+@media (max-width: 1023px) {
+  .card-body {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .player-side {
+    width: 100%;
+  }
+  .player-container iframe {
+    height: 240px;
+  }
+}
+
+@media (max-width: 767px) {
+  .song-vote-card {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .song-name {
+    font-size: 17px;
+  }
+  .issue-list {
+    grid-template-columns: 1fr;
+  }
+  .no-player {
+    padding: 30px;
+  }
+}
 </style>
