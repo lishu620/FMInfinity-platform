@@ -75,10 +75,13 @@
         <el-menu-item index="10" v-if="!authStore.isLoggedIn" class="login-btn">
           登录
         </el-menu-item>
+        <el-menu-item index="13" v-if="!authStore.isLoggedIn" class="register-btn">
+          注册
+        </el-menu-item>
 
         <template v-else>
           <!-- 通知按钮 -->
-          <el-menu-item index="9" @click.native="noticeStore.isDrawerOpen = true">
+          <el-menu-item index="9" @click="noticeStore.isDrawerOpen = true">
             <el-badge :value="noticeStore.unReadCount" :max="99" class="notice-badge">
               通知
             </el-badge>
@@ -155,6 +158,7 @@
 
           <template v-if="!authStore.isLoggedIn">
             <div class="mobile-menu-item" @click="navTo('/login')">🔑 登录</div>
+            <div class="mobile-menu-item" @click="navTo('/register')">📝 注册</div>
           </template>
           <template v-else>
             <div class="mobile-menu-item" @click="navTo('/profile')">👤 个人主页</div>
@@ -339,6 +343,9 @@ const handleSelect = (key) => {
     case "11":
       router.push("/profile");
       break;
+    case "13":
+      router.push("/register");
+      break;
   }
 };
 
@@ -374,9 +381,7 @@ watch(
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--card-bg, rgba(255,255,255,0.85));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--card-bg, rgba(255,255,255,0.95));
   border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06));
 }
 
@@ -419,6 +424,11 @@ watch(
 
 .login-btn {
   color: #409eff !important;
+  font-weight: 500;
+}
+
+.register-btn {
+  color: #67c23a !important;
   font-weight: 500;
 }
 
@@ -551,8 +561,6 @@ watch(
   left: 0;
   right: 0;
   background: var(--card-bg, rgba(255,255,255,0.98));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--card-border, rgba(0,0,0,0.06));
   padding: 8px 0;
   max-height: calc(100vh - 48px);

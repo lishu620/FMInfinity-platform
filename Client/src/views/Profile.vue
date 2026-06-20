@@ -141,7 +141,7 @@ const updateProfile = async () => {
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 @media (min-width: 768px) {

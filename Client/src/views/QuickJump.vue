@@ -120,6 +120,17 @@
           </div>
           <div class="card-arrow">→</div>
         </div>
+
+        <div class="feature-card card-register" @click="GoPage('/register')">
+          <div class="card-icon-wrapper">
+            <el-icon :size="32"><Plus /></el-icon>
+          </div>
+          <div class="card-body">
+            <h3>用户注册</h3>
+            <p>注册新用户账号，加入平台参与更多功能</p>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
       </div>
     </section>
 
@@ -263,7 +274,7 @@ import {
   Histogram, Calendar, Platform, TrendCharts, DocumentChecked, Reading,
   Microphone, UserFilled, Notebook, Edit, Management, EditPen,
   Setting, Avatar, Share, Headset, HomeFilled, User, House, InfoFilled,
-  ChatLineSquare
+  ChatLineSquare, Plus
 } from "@element-plus/icons-vue";
 import api from "@/store/auth";
 
@@ -350,7 +361,7 @@ onMounted(() => {
   padding: 20px 16px;
   margin-bottom: 20px;
   box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @media (min-width: 768px) {
@@ -455,7 +466,7 @@ onMounted(() => {
 /* ========== 区块 ========== */
 .section-block {
   margin-bottom: 28px;
-  animation: fadeInUp 0.5s ease both;
+  animation: fadeInUp 0.5s ease forwards;
 }
 .section-block:nth-child(2) { animation-delay: 0.05s; }
 .section-block:nth-child(3) { animation-delay: 0.1s; }
@@ -649,6 +660,9 @@ onMounted(() => {
 
 .card-home .card-icon-wrapper { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
 .card-home:hover::before { background: #95a5a6; }
+
+.card-register .card-icon-wrapper { background: linear-gradient(135deg, #67C23A, #529b2e); }
+.card-register:hover::before { background: #67C23A; }
 
 /* ========== 底部提示 ========== */
 .footer-tip {

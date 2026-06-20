@@ -85,7 +85,7 @@ const scrollToFeatures = () => {
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
   margin: 12px;
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @media (min-width: 768px) {
@@ -187,7 +187,7 @@ const scrollToFeatures = () => {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeInUp 0.5s cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation: fadeInUp 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 .feature-card:nth-child(1) { animation-delay: 0.1s; }

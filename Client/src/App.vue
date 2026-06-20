@@ -3,7 +3,7 @@
 
   <div class="container">
     <router-view v-slot="{ Component }">
-      <transition name="page" mode="out-in">
+      <transition name="page">
         <component :is="Component" />
       </transition>
     </router-view>
@@ -28,34 +28,19 @@ import Menu from "./components/Menu.vue";
   }
 }
 
-/* 页面过渡动画 */
-.page-enter-active {
-  animation: pageEnter 0.35s cubic-bezier(0.19, 1, 0.22, 1) both;
-}
-
+/* 页面过渡动画 —— 用 transition 而非 animation，更可靠 */
+.page-enter-active,
 .page-leave-active {
-  animation: pageLeave 0.2s ease both;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
 }
 
-@keyframes pageLeave {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>

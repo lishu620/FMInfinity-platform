@@ -60,7 +60,6 @@ body {
   background: var(--bg-color, #fff);
   color: var(--text-primary, #35495e);
   transition: background 0.3s ease;
-  overflow-x: hidden;
 }
 
 #app {

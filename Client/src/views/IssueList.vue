@@ -183,7 +183,7 @@ onMounted(() => {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.3));
-  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation: fadeInUp 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 .issue-card:nth-child(1) { animation-delay: 0.05s; }

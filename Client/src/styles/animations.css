@@ -288,21 +288,6 @@
 
 /* ---------- Element Plus 增强动画 ---------- */
 
-/* 对话框进入 */
-.el-dialog {
-  animation: scaleIn 0.3s var(--ease-out-back) both;
-}
-
-/* 抽屉进入 */
-.el-drawer {
-  animation: fadeInRight 0.3s var(--ease-out-expo) both;
-}
-
-/* 消息提示动画 */
-.el-message {
-  animation: fadeInDown 0.3s var(--ease-out-expo) both;
-}
-
 /* 卡片悬浮 */
 .el-card {
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
